@@ -1,0 +1,279 @@
+html, body, div, span, applet, object, iframe,
+h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,
+address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,
+small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,
+li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,
+tr,th,td,article,aside,canvas,details,embed,figure,figcaption,
+footer,header,hgroup,menu,nav,output,ruby,section,summary, time,
+mark, audio,video {
+    margin:0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font:inherit;
+    vertical-align: baseline;
+}
+
+@font-face {
+    font-display: swap;
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 200;
+    src: url('../fonts/montserrat-v26-cyrillic_latin-200.woff2') format('woff2');
+}
+
+@font-face {
+    font-display: swap;
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/montserrat-v26-cyrillic_latin-regular.woff2') format('woff2');
+}
+
+@font-face {
+    font-display: swap;
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 500;
+    src: url('../fonts/montserrat-v26-cyrillic_latin-500.woff2') format('woff2');
+}
+
+@font-face {
+    font-display: swap;
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 800;
+    src: url('../fonts/montserrat-v26-cyrillic_latin-800.woff2') format('woff2');
+}
+
+
+html {
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+    
+}
+
+.body {
+    font-family: Montserrat;
+    font-style: normal;
+    font-size:16px;
+    line-height: 1.2;
+    font-weight: normal;
+    color: #05D80A
+}
+.wrapper{
+    max-width: 1440px;
+    margin: 0 auto
+    
+}
+
+/* Стили для хедера */
+
+.header {
+    z-index: 3;
+    border-radius: 0px 0px 20px 20px;
+    background: rgb(192, 249, 187);
+    position:fixed;
+    top:0;
+    left: 0;
+    width: 100%;
+    margin-top: 0px;
+    
+}
+.header_wrapper {
+    color: black;
+    padding-top: 10px; 
+    display:flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.header_list {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.header_item {
+    
+    margin-right: 62px;
+    list-style: none;
+}
+
+.header_item:last-child {
+    margin-right: 0;
+}
+
+.header_link {
+    font-size: 18px;
+    line-height: 24px;
+    color:#05D80A;
+    text-decoration: none;
+}
+.header_link:hover, .header_link:focus, .header_link:active{
+    opacity: .75;
+}
+
+/* Стили интро */
+
+.intro {
+    height: 93vh;
+    padding-top: 260px;
+    font-size: 144px;
+
+}
+.intro_title {
+    font-size: 144px;
+    font-weight: 400;
+    line-height: 151px;
+    color:#05D80A;
+    margin-bottom: 8px;
+}
+.intro_subtitle {
+    max-width: 617px;
+    color:#05D80A;
+    font-size: 64px;
+    font-weight: 275;
+    line-height: 78px;
+}
+
+.greenDoctor {
+    width: 670px;
+    height: 755px;
+    position: absolute;
+    left: 1060px;
+    right: 184.33px;
+    top: 143px;
+    bottom: 169px;
+}
+
+.logo2 {
+    z-index: -1;
+    position: absolute;
+    width: 1086.33px;
+    height: 1098.01px;
+    left: 750px;
+    right: 0;
+    top: 0px;
+    bottom: 190.99px;
+}
+
+.block{
+    position: absolute;
+    width: 1920px;
+    height: 54px;
+    bottom: 0px;
+    background: linear-gradient(135.00deg, rgb(255, 255, 255),rgb(53, 219, 31) 100%);
+}
+
+/* Создание твоуртро */
+
+.about {
+    color:#05D80A;
+    margin: 0 auto;
+    font-size: 64px;
+    font-weight: 275;
+    text-align: center;
+    line-height: 78px;
+    margin-top: 55px;
+    box-sizing: border-box;
+    border-bottom: 1px solid rgb(53, 219, 31);
+    max-width: 200px;
+    margin-bottom: 36px;
+}
+
+.opis {
+    height: 75vh;
+    max-width: 1440px;
+    margin: 0 auto
+    
+}
+
+.vracham {
+    color:#05D80A;
+    font-size: 48px;
+    font-weight: 300;
+    line-height: 59px;
+    box-sizing: border-box;
+    border-bottom: 1px solid rgb(53, 219, 31);
+    max-width: max-content;
+}
+
+.opisvrach {
+    font-size: 36px;
+    font-weight: 275;
+    line-height: 44px;
+    max-width: 750px;
+    color:#05D80A;
+    margin-top: 10px;
+}
+
+.pacient {
+    color:#05D80A;
+    font-size: 48px;
+    font-weight: 300;
+    line-height: 59px;
+    box-sizing: border-box;
+    border-bottom: 1px solid rgb(53, 219, 31);
+    max-width: max-content;
+    margin-left: 48%;
+}
+
+.opisclient {
+    font-size: 36px;
+    font-weight: 275;
+    line-height: 44px;
+    max-width: 750px;
+    color:#05D80A;
+    margin-left: auto;
+}
+
+.block2 {
+    position: absolute;
+    width: 1920px;
+    height: 54px;
+    bottom: -900px;
+    background: linear-gradient(135.00deg, rgb(255, 255, 255),rgb(53, 219, 31) 100%);
+}
+
+.functia {
+    height: 100vh;
+    max-width: 1440px;
+    margin: 0 auto
+}
+
+.fanc {
+    color:#05D80A;
+    margin: 0 auto;
+    font-size: 64px;
+    font-weight: 275;
+    text-align: center;
+    line-height: 78px;
+    margin-top: 55px;
+    box-sizing: border-box;
+    border-bottom: 1px solid rgb(53, 219, 31);
+    max-width:max-content;
+    margin-bottom: 36px;
+}
+
+.card{
+    max-width: 1440px;
+    margin: 0 auto;
+    margin-left: 13%;
+}
+
+.main {
+    background: linear-gradient(135.00deg, rgba(53, 219, 31, 0.2),rgba(0, 0, 0, 0) 37.405%,rgba(0, 0, 0, 0) 69.975%,rgba(53, 219, 31, 0.2) 100%),rgba(255, 255, 255, 0);
+}
+
+.two {
+    background: linear-gradient(135.00deg, rgba(53, 219, 31, 0.2),rgba(0, 0, 0, 0) 37.405%,rgba(0, 0, 0, 0) 69.975%,rgba(53, 219, 31, 0.2) 100%),rgba(255, 255, 255, 0);
+}
+
+.three {
+    background: linear-gradient(135.00deg, rgba(53, 219, 31, 0.2),rgba(0, 0, 0, 0) 37.405%,rgba(0, 0, 0, 0) 69.975%,rgba(53, 219, 31, 0.2) 100%),rgba(255, 255, 255, 0);
+}
