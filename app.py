@@ -28,8 +28,7 @@ def login():
     cur.close()
 
     if user:
-        # Логика для перенаправления в зависимости от роли
-        role = user[6]  # Индекс может изменяться в зависимости от структуры таблицы
+        role = user[6]
         if role == "Доктор":
             return redirect(url_for('doctor_page'))
         elif role == "Пациент":
