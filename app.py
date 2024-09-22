@@ -50,7 +50,7 @@ def register():
     password = request.form['password']
     cur = mysql.connection.cursor()
 
-    cur.execute("SELECT * FROM reg WHERE email = %s", (email,))
+    cur.execute("SELECT * FROM reg WHERE email = %s", (email))
     existing_user = cur.fetchone()
 
     

@@ -32,7 +32,18 @@ document.addEventListener('DOMContentLoaded', function() {
             modal.style.display = "none";
         }
     });
-
+    function enableRoleCode() {
+        var buildingCode = document.getElementById('buildingCode').value;
+        var roleCodeField = document.getElementById('roleCode');
+        
+        if (buildingCode === '003') {
+            roleCodeField.disabled = false;
+        } else {
+            roleCodeField.disabled = true;
+            document.getElementById('role').value = '';
+            roleCodeField.value = '';
+        }
+    }
     // Функция для установки роли на основе кода роли
     function setRole() {
         var roleCode = document.getElementById('roleCode').value;
@@ -48,18 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Функция для включения/отключения поля кода роли на основе кода здания
-    function enableRoleCode() {
-        var buildingCode = document.getElementById('buildingCode').value;
-        var roleCodeField = document.getElementById('roleCode');
-        
-        if (buildingCode === '003') {
-            roleCodeField.disabled = false;
-        } else {
-            roleCodeField.disabled = true;
-            document.getElementById('role').value = '';
-            roleCodeField.value = '';
-        }
-    }
+    
 
     // Привязка функции установки роли к событию ввода в поле кода роли
     document.getElementById('roleCode').addEventListener('input', setRole);

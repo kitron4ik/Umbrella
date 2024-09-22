@@ -1,0 +1,122 @@
+html, body, div, span, applet, object, iframe,
+h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,
+address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,
+small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,
+li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,
+tr,th,td,article,aside,canvas,details,embed,figure,figcaption,
+footer,header,hgroup,menu,nav,output,ruby,section,summary, time,
+mark, audio,video {
+    margin:0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font:inherit;
+    vertical-align: baseline;
+}
+
+@font-face {
+    font-display: swap;
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 200;
+    src: url("{{ url_for('static', filename='fonts/Montserrat200.woff2') }}") format('woff2');
+}
+
+@font-face {
+    font-display: swap;
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 400;
+    src: url("{{ url_for('static', filename='fonts/MontserratRegular.woff2') }}") format('woff2');
+}
+
+@font-face {
+    font-display: swap;
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 500;
+    src: url("{{ url_for('static', filename='fonts/Montserrat500.woff2') }}") format('woff2');
+}
+
+@font-face {
+    font-display: swap;
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 800;
+    src: url("{{ url_for('static', filename='fonts/Montserrat800.woff2') }}") format('woff2');
+}
+
+.body {
+    font-family: 'Montserrat', 'MontserratRegular';
+    font-style: normal;
+    font-size:16px;
+    line-height: 1.2;
+    font-weight: normal;
+    color: #05D80A;
+}
+
+
+
+html {
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+    
+}
+
+
+.wrapper{
+    max-width: 1440px;
+    margin: 0 auto
+    
+}
+
+/* Стили для хедера */
+
+.header {
+    z-index: 3;
+    border-radius: 0px 0px 20px 20px;
+    background: rgb(192, 249, 187);
+    position:fixed;
+    top:0;
+    left: 0;
+    width: 100%;
+    margin-top: 0px;
+    
+}
+.header_wrapper {
+    color: black;
+    padding-top: 10px; 
+    display:flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.header_list {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.header_item {
+    
+    margin-right: 62px;
+    list-style: none;
+}
+
+.header_item:last-child {
+    margin-right: 0;
+}
+
+.header_link {
+    font-size: 18px;
+    line-height: 24px;
+    color:#05D80A;
+    text-decoration: none;
+}
+.header_link:hover, .header_link:focus, .header_link:active{
+    opacity: .75;
+}
