@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.38, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.34, for Win64 (x86_64)
 --
--- Host: localhost    Database: umbrella
+-- Host: 127.0.0.1    Database: umbrella
 -- ------------------------------------------------------
--- Server version	8.0.39
+-- Server version	8.2.0
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -28,10 +28,7 @@ CREATE TABLE `pacients` (
   `surname` varchar(45) DEFAULT NULL,
   `age` varchar(45) DEFAULT NULL,
   `adress` varchar(45) DEFAULT NULL,
-  `reg_idreg` int NOT NULL,
-  PRIMARY KEY (`idpacients`),
-  KEY `fk_pacients_reg1_idx` (`reg_idreg`),
-  CONSTRAINT `fk_pacients_reg1` FOREIGN KEY (`reg_idreg`) REFERENCES `reg` (`idreg`)
+  PRIMARY KEY (`idpacients`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -53,4 +50,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-17 11:03:33
+-- Dump completed on 2024-09-24 11:23:00

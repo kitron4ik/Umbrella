@@ -16,33 +16,31 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `doctors`
+-- Table structure for table `doc_appointment`
 --
 
-DROP TABLE IF EXISTS `doctors`;
+DROP TABLE IF EXISTS `doc_appointment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `doctors` (
-  `iddoctors` int NOT NULL,
-  `dname` varchar(45) DEFAULT NULL,
-  `dsurname` varchar(45) DEFAULT NULL,
-  `hospitals_idhospitals` int NOT NULL,
-  `post` varchar(45) DEFAULT NULL,
-  `doctorscol` varchar(45) DEFAULT NULL,
-  `key` tinyint DEFAULT NULL,
-  PRIMARY KEY (`iddoctors`),
-  KEY `fk_doctors_hospitals1_idx` (`hospitals_idhospitals`),
-  CONSTRAINT `fk_doctors_hospitals1` FOREIGN KEY (`hospitals_idhospitals`) REFERENCES `hospitals` (`idhospitals`) ON DELETE CASCADE ON UPDATE CASCADE
+CREATE TABLE `doc_appointment` (
+  `iddoc_appointment` int NOT NULL,
+  `appointment_idappointment` int NOT NULL,
+  `health_card_idhealth_card` int NOT NULL,
+  PRIMARY KEY (`iddoc_appointment`),
+  KEY `fk_doc_appointment_appointment1_idx` (`appointment_idappointment`),
+  KEY `fk_doc_appointment_health_card1_idx` (`health_card_idhealth_card`),
+  CONSTRAINT `fk_doc_appointment_appointment1` FOREIGN KEY (`appointment_idappointment`) REFERENCES `appointment` (`idappointment`),
+  CONSTRAINT `fk_doc_appointment_health_card1` FOREIGN KEY (`health_card_idhealth_card`) REFERENCES `health_card` (`idhealth_card`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `doctors`
+-- Dumping data for table `doc_appointment`
 --
 
-LOCK TABLES `doctors` WRITE;
-/*!40000 ALTER TABLE `doctors` DISABLE KEYS */;
-/*!40000 ALTER TABLE `doctors` ENABLE KEYS */;
+LOCK TABLES `doc_appointment` WRITE;
+/*!40000 ALTER TABLE `doc_appointment` DISABLE KEYS */;
+/*!40000 ALTER TABLE `doc_appointment` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -54,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-24 11:23:00
+-- Dump completed on 2024-09-24 11:23:01

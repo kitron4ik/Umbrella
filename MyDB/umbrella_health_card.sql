@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.38, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.34, for Win64 (x86_64)
 --
--- Host: localhost    Database: umbrella
+-- Host: 127.0.0.1    Database: umbrella
 -- ------------------------------------------------------
--- Server version	8.0.39
+-- Server version	8.2.0
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -25,7 +25,6 @@ DROP TABLE IF EXISTS `health_card`;
 CREATE TABLE `health_card` (
   `idhealth_card` int NOT NULL,
   `pacients_idpacients` int NOT NULL,
-  `hospitals_idhospitals` int NOT NULL,
   `consent` varchar(500) DEFAULT NULL,
   `accounting_date` date DEFAULT NULL,
   `diagnoses` varchar(45) DEFAULT NULL,
@@ -35,8 +34,6 @@ CREATE TABLE `health_card` (
   `medecine` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`idhealth_card`),
   KEY `fk_health_card_pacients1_idx` (`pacients_idpacients`),
-  KEY `fk_health_card_hospitals1_idx` (`hospitals_idhospitals`),
-  CONSTRAINT `fk_health_card_hospitals1` FOREIGN KEY (`hospitals_idhospitals`) REFERENCES `hospitals` (`idhospitals`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_health_card_pacients1` FOREIGN KEY (`pacients_idpacients`) REFERENCES `pacients` (`idpacients`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -59,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-17 11:03:33
+-- Dump completed on 2024-09-24 11:22:59

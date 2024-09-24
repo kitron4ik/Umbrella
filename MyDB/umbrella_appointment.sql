@@ -16,33 +16,33 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `doctors`
+-- Table structure for table `appointment`
 --
 
-DROP TABLE IF EXISTS `doctors`;
+DROP TABLE IF EXISTS `appointment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `doctors` (
-  `iddoctors` int NOT NULL,
-  `dname` varchar(45) DEFAULT NULL,
-  `dsurname` varchar(45) DEFAULT NULL,
-  `hospitals_idhospitals` int NOT NULL,
-  `post` varchar(45) DEFAULT NULL,
-  `doctorscol` varchar(45) DEFAULT NULL,
-  `key` tinyint DEFAULT NULL,
-  PRIMARY KEY (`iddoctors`),
-  KEY `fk_doctors_hospitals1_idx` (`hospitals_idhospitals`),
-  CONSTRAINT `fk_doctors_hospitals1` FOREIGN KEY (`hospitals_idhospitals`) REFERENCES `hospitals` (`idhospitals`) ON DELETE CASCADE ON UPDATE CASCADE
+CREATE TABLE `appointment` (
+  `idappointment` int NOT NULL,
+  `doctors_iddoctors` int NOT NULL,
+  `appdate` date DEFAULT NULL,
+  `apptime` int DEFAULT NULL,
+  `pacients_idpacients` int NOT NULL,
+  PRIMARY KEY (`idappointment`),
+  KEY `fk_appointment_doctors1_idx` (`doctors_iddoctors`),
+  KEY `fk_appointment_pacients1_idx` (`pacients_idpacients`),
+  CONSTRAINT `fk_appointment_doctors1` FOREIGN KEY (`doctors_iddoctors`) REFERENCES `doctors` (`iddoctors`),
+  CONSTRAINT `fk_appointment_pacients1` FOREIGN KEY (`pacients_idpacients`) REFERENCES `pacients` (`idpacients`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `doctors`
+-- Dumping data for table `appointment`
 --
 
-LOCK TABLES `doctors` WRITE;
-/*!40000 ALTER TABLE `doctors` DISABLE KEYS */;
-/*!40000 ALTER TABLE `doctors` ENABLE KEYS */;
+LOCK TABLES `appointment` WRITE;
+/*!40000 ALTER TABLE `appointment` DISABLE KEYS */;
+/*!40000 ALTER TABLE `appointment` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

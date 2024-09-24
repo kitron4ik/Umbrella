@@ -16,33 +16,30 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `doctors`
+-- Table structure for table `checkip`
 --
 
-DROP TABLE IF EXISTS `doctors`;
+DROP TABLE IF EXISTS `checkip`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `doctors` (
-  `iddoctors` int NOT NULL,
-  `dname` varchar(45) DEFAULT NULL,
-  `dsurname` varchar(45) DEFAULT NULL,
+CREATE TABLE `checkip` (
+  `idcheckip` int NOT NULL,
   `hospitals_idhospitals` int NOT NULL,
-  `post` varchar(45) DEFAULT NULL,
-  `doctorscol` varchar(45) DEFAULT NULL,
-  `key` tinyint DEFAULT NULL,
-  PRIMARY KEY (`iddoctors`),
-  KEY `fk_doctors_hospitals1_idx` (`hospitals_idhospitals`),
-  CONSTRAINT `fk_doctors_hospitals1` FOREIGN KEY (`hospitals_idhospitals`) REFERENCES `hospitals` (`idhospitals`) ON DELETE CASCADE ON UPDATE CASCADE
+  `whitelist` int DEFAULT NULL,
+  `blaclist` int DEFAULT NULL,
+  PRIMARY KEY (`idcheckip`),
+  KEY `fk_checkip_hospitals1_idx` (`hospitals_idhospitals`),
+  CONSTRAINT `fk_checkip_hospitals1` FOREIGN KEY (`hospitals_idhospitals`) REFERENCES `hospitals` (`idhospitals`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `doctors`
+-- Dumping data for table `checkip`
 --
 
-LOCK TABLES `doctors` WRITE;
-/*!40000 ALTER TABLE `doctors` DISABLE KEYS */;
-/*!40000 ALTER TABLE `doctors` ENABLE KEYS */;
+LOCK TABLES `checkip` WRITE;
+/*!40000 ALTER TABLE `checkip` DISABLE KEYS */;
+/*!40000 ALTER TABLE `checkip` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -54,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-24 11:23:00
+-- Dump completed on 2024-09-24 11:22:59
