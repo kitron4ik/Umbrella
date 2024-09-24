@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.38, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.34, for Win64 (x86_64)
 --
--- Host: localhost    Database: umbrella
+-- Host: 127.0.0.1    Database: umbrella
 -- ------------------------------------------------------
--- Server version	8.0.39
+-- Server version	8.2.0
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `doctors`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `doctors` (
-  `iddoctors` int NOT NULL,
+  `iddoctors` int NOT NULL AUTO_INCREMENT,
   `dname` varchar(45) DEFAULT NULL,
   `dsurname` varchar(45) DEFAULT NULL,
   `hospitals_idhospitals` int NOT NULL,
@@ -57,4 +57,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-17 11:03:33
+-- Dump completed on 2024-09-24 12:23:56

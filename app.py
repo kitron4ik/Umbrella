@@ -6,8 +6,8 @@ app.secret_key = 'your_secret_key'  # Необходимо для использ
 
 # Настройки для подключения к MySQL
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'nero'
-app.config['MYSQL_PASSWORD'] = '1212'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'root'
 app.config['MYSQL_DB'] = 'umbrella'
 
 # Инициализация MySQL
@@ -50,7 +50,7 @@ def register():
     password = request.form['password']
     cur = mysql.connection.cursor()
 
-    cur.execute("SELECT * FROM reg WHERE email = %s", (email))
+    cur.execute("SELECT * FROM reg WHERE email = %s", (email,))
     existing_user = cur.fetchone()
 
     
@@ -60,7 +60,7 @@ def register():
         cur.close()
         return redirect(url_for('main'))
     cur.execute("""
-        INSERT INTO reg (name, email, building_code, role_code, role, password) 
+        INSERT INTO reg (regname, email, building_code, role_code, role, password) 
         VALUES (%s, %s, %s, %s, %s, %s)
     """, (name, email, building_code, role_code, role, password))
     mysql.connection.commit()

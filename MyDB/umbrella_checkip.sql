@@ -16,32 +16,30 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `documents`
+-- Table structure for table `checkip`
 --
 
-DROP TABLE IF EXISTS `documents`;
+DROP TABLE IF EXISTS `checkip`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `documents` (
-  `iddocuments` int NOT NULL AUTO_INCREMENT,
-  `SNILS` int NOT NULL,
-  `insurance` int NOT NULL,
-  `pasport` int NOT NULL,
-  `pacients_idpacients` int NOT NULL,
-  `referral` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`iddocuments`),
-  KEY `fk_documents_pacients1_idx` (`pacients_idpacients`),
-  CONSTRAINT `fk_documents_pacients1` FOREIGN KEY (`pacients_idpacients`) REFERENCES `pacients` (`idpacients`) ON DELETE CASCADE ON UPDATE CASCADE
+CREATE TABLE `checkip` (
+  `idcheckip` int NOT NULL AUTO_INCREMENT,
+  `hospitals_idhospitals` int NOT NULL,
+  `whitelist` int DEFAULT NULL,
+  `blaclist` int DEFAULT NULL,
+  PRIMARY KEY (`idcheckip`),
+  KEY `fk_checkip_hospitals1_idx` (`hospitals_idhospitals`),
+  CONSTRAINT `fk_checkip_hospitals1` FOREIGN KEY (`hospitals_idhospitals`) REFERENCES `hospitals` (`idhospitals`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `documents`
+-- Dumping data for table `checkip`
 --
 
-LOCK TABLES `documents` WRITE;
-/*!40000 ALTER TABLE `documents` DISABLE KEYS */;
-/*!40000 ALTER TABLE `documents` ENABLE KEYS */;
+LOCK TABLES `checkip` WRITE;
+/*!40000 ALTER TABLE `checkip` DISABLE KEYS */;
+/*!40000 ALTER TABLE `checkip` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

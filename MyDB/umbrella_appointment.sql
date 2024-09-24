@@ -16,32 +16,33 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `documents`
+-- Table structure for table `appointment`
 --
 
-DROP TABLE IF EXISTS `documents`;
+DROP TABLE IF EXISTS `appointment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `documents` (
-  `iddocuments` int NOT NULL AUTO_INCREMENT,
-  `SNILS` int NOT NULL,
-  `insurance` int NOT NULL,
-  `pasport` int NOT NULL,
+CREATE TABLE `appointment` (
+  `idappointment` int NOT NULL AUTO_INCREMENT,
+  `doctors_iddoctors` int NOT NULL,
+  `appdate` date DEFAULT NULL,
+  `apptime` int DEFAULT NULL,
   `pacients_idpacients` int NOT NULL,
-  `referral` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`iddocuments`),
-  KEY `fk_documents_pacients1_idx` (`pacients_idpacients`),
-  CONSTRAINT `fk_documents_pacients1` FOREIGN KEY (`pacients_idpacients`) REFERENCES `pacients` (`idpacients`) ON DELETE CASCADE ON UPDATE CASCADE
+  PRIMARY KEY (`idappointment`),
+  KEY `fk_appointment_doctors1_idx` (`doctors_iddoctors`),
+  KEY `fk_appointment_pacients1_idx` (`pacients_idpacients`),
+  CONSTRAINT `fk_appointment_doctors1` FOREIGN KEY (`doctors_iddoctors`) REFERENCES `doctors` (`iddoctors`),
+  CONSTRAINT `fk_appointment_pacients1` FOREIGN KEY (`pacients_idpacients`) REFERENCES `pacients` (`idpacients`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `documents`
+-- Dumping data for table `appointment`
 --
 
-LOCK TABLES `documents` WRITE;
-/*!40000 ALTER TABLE `documents` DISABLE KEYS */;
-/*!40000 ALTER TABLE `documents` ENABLE KEYS */;
+LOCK TABLES `appointment` WRITE;
+/*!40000 ALTER TABLE `appointment` DISABLE KEYS */;
+/*!40000 ALTER TABLE `appointment` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -53,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-24 12:23:57
+-- Dump completed on 2024-09-24 12:23:55

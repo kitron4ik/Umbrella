@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.38, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.34, for Win64 (x86_64)
 --
--- Host: localhost    Database: umbrella
+-- Host: 127.0.0.1    Database: umbrella
 -- ------------------------------------------------------
--- Server version	8.0.39
+-- Server version	8.2.0
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -23,12 +23,14 @@ DROP TABLE IF EXISTS `hospitals`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `hospitals` (
-  `idhospitals` int NOT NULL,
-  `harmonia` varchar(45) DEFAULT NULL,
-  `genesis` varchar(45) DEFAULT NULL,
-  `avicena` varchar(45) DEFAULT NULL,
-  `gemotest` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`idhospitals`)
+  `idhospitals` int NOT NULL AUTO_INCREMENT,
+  `add` varchar(45) DEFAULT NULL,
+  `ip` int DEFAULT NULL,
+  `hosname` varchar(45) DEFAULT NULL,
+  `health_card_idhealth_card` int NOT NULL,
+  PRIMARY KEY (`idhospitals`),
+  KEY `fk_hospitals_health_card1_idx` (`health_card_idhealth_card`),
+  CONSTRAINT `fk_hospitals_health_card1` FOREIGN KEY (`health_card_idhealth_card`) REFERENCES `health_card` (`idhealth_card`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -50,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-17 11:03:33
+-- Dump completed on 2024-09-24 12:23:56
