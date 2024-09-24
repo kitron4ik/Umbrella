@@ -1,21 +1,42 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, session, url_for, flash
 from flask_mysqldb import MySQL
 
 app = Flask(__name__, static_folder='./templates/static')
-app.secret_key = 'your_secret_key'  # Необходимо для использования flash-сообщений
 
 # Настройки для подключения к MySQL
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'root'
+app.config['MYSQL_USER'] = 'nero'
+app.config['MYSQL_PASSWORD'] = '1212'
 app.config['MYSQL_DB'] = 'umbrella'
 
-# Инициализация MySQL
 mysql = MySQL(app)
+app.secret_key = 'Umbrella'
 
 @app.route("/")
 def main():
     return render_template("index.html")
+
+@app.route('/doctor', methods=['GET', 'POST'])
+def doctor_page():
+    if 'regname' in session:
+        regname = session['regname']
+        return render_template('doctor.html', RegisName=regname)
+    else:
+        flash('Пожалуйста, войдите в систему.')
+        return redirect(url_for('login'))
+
+@app.route("/docGr")
+def doctorGr():
+    return render_template("doctorGraphics.html")
+
+@app.route("/spCard")
+def SpCart():
+    return render_template("SpisocCart.html")
+
+@app.route("/ZapPac")
+def ZapPac():
+    return render_template("ZapisPacientov.html")
+
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -29,6 +50,7 @@ def login():
 
     if user:
         role = user[6]
+        session['regname'] = user[1]
         if role == "Доктор":
             return redirect(url_for('doctor_page'))
         elif role == "Пациент":
@@ -39,6 +61,8 @@ def login():
     else:
         flash('Неверный email или пароль')
         return redirect(url_for('main'))
+
+
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -53,10 +77,7 @@ def register():
     cur.execute("SELECT * FROM reg WHERE email = %s", (email,))
     existing_user = cur.fetchone()
 
-    
-
     if existing_user:
-        flash('Пользователь с таким email уже зарегистрирован.')
         cur.close()
         return redirect(url_for('main'))
     cur.execute("""
@@ -74,13 +95,15 @@ def register():
         flash('Неверная роль пользователя')
         return redirect(url_for('main'))
 
+
 @app.route('/patient')
 def patient_page():
     return render_template("patient.html")
 
-@app.route('/doctor')
-def doctor_page():
-    return render_template("doctor.html")
+
+
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)

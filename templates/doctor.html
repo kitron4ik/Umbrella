@@ -18,21 +18,39 @@
                 <nav class="header_nav">
                     <ul class="header_list">
                         <li class="header_item">
-                            <a href="/" class="header_link">Мой профиль</a>
+                            <a href="/doctor" class="header_link">Мой профиль</a>
                         </li>
                         <li class="header_item">
-                            <a href="/" class="header_link">Пациенты на запись</a>
+                            <a href="/ZapPac" class="header_link">Пациенты на запись</a>
                         </li>
                         <li class="header_item">
-                            <a href="/" class="header_link" id="openRegister">Мой график</a>
+                            <a href="/docGr" class="header_link" id="openRegister">Мой график</a>
                         </li>
                         <li class="header_item">
-                            <a href="/" class="header_link" id="openLogin">Список карт</a>
+                            <a href="/spCard" class="header_link" id="openLogin">Список карт</a>
                         </li>
                     </ul>
                 </nav>
             </div>
         </div>
     </header>
+    <main class="main">
+        <section class="intro">
+            <div class="wrapper">
+                <h1 class="Welcome">Добро пожаловать в ваш личный кабинет</h1>
+                <form id="loginForm" class="form-container" method="POST" action="{{ url_for('doctor_page') }}">
+                    <label for="name">Имя:</label>
+                    <!-- Поле с выводом переменной RegisName и атрибутом readonly -->
+                    <input type="text" id="name" name="name" value="{{ RegisName }}" readonly>
+                    <button type="submit" disabled>Сохранить</button> <!-- Кнопка сохранения также отключена -->
+                </form>
+            </div>
+        </section>    
+    </main>
+    
+    
+
+
+
 </body>
 </html>

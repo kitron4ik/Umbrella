@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/doctorPageCSS/Style.css') }}">
+    <title>Document</title>
+</head>
+<body>
+    <header class="header">
+        <div class="wrapper">
+            <div class="header_wrapper">
+                <div class="header_logo">
+                    <a href="/" class="header_logo_link">
+                        <img src="{{ url_for('static', filename='img/png/logo.png') }}" alt="Logo" />
+                    </a>
+                </div>
+                <nav class="header_nav">
+                    <ul class="header_list">
+                        <li class="header_item">
+                            <a href="/doctor" class="header_link">Мой профиль</a>
+                        </li>
+                        <li class="header_item">
+                            <a href="/ZapPac" class="header_link">Пациенты на запись</a>
+                        </li>
+                        <li class="header_item">
+                            <a href="/docGr" class="header_link" id="openRegister">Мой график</a>
+                        </li>
+                        <li class="header_item">
+                            <a href="/spCard" class="header_link" id="openLogin">Список карт</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <img src="{{ url_for('static', filename='img/png/Calendar.png') }}" alt="Calendar" class="Calendar" />
+</body>
+</html>
