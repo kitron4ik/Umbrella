@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nabla&display=swap');
+
 html, body, div, span, applet, object, iframe,
 h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,
 address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,
@@ -14,40 +16,10 @@ mark, audio,video {
     vertical-align: baseline;
 }
 
-@font-face {
-    font-display: swap;
-    font-family: 'Montserrat';
-    font-style: normal;
-    font-weight: 200;
-    src: url("{{ url_for('static', filename='fonts/Montserrat200.woff2') }}") format('woff2');
-}
 
-@font-face {
-    font-display: swap;
-    font-family: 'Montserrat';
-    font-style: normal;
-    font-weight: 400;
-    src: url("{{ url_for('static', filename='fonts/MontserratRegular.woff2') }}") format('woff2');
-}
-
-@font-face {
-    font-display: swap;
-    font-family: 'Montserrat';
-    font-style: normal;
-    font-weight: 500;
-    src: url("{{ url_for('static', filename='fonts/Montserrat500.woff2') }}") format('woff2');
-}
-
-@font-face {
-    font-display: swap;
-    font-family: 'Montserrat';
-    font-style: normal;
-    font-weight: 800;
-    src: url("{{ url_for('static', filename='fonts/Montserrat800.woff2') }}") format('woff2');
-}
 
 .body {
-    font-family: 'Montserrat', 'MontserratRegular';
+    font-family: 'Montserrat', light;
     font-style: normal;
     font-size:16px;
     line-height: 1.2;
@@ -88,7 +60,6 @@ html {
     
 }
 .header_wrapper {
-    color: black;
     padding-top: 10px; 
     display:flex;
     flex-wrap: wrap;
@@ -102,8 +73,8 @@ html {
 }
 
 .header_item {
-    
-    margin-right: 62px;
+    font-family: 'Montserrat', light;
+    margin-right: 70px;
     list-style: none;
 }
 
@@ -139,6 +110,7 @@ html {
 }
 
 .intro_subtitle {
+    font-family: 'Montserrat', light;
     max-width: 617px;
     color:#05D80A;
     font-size: 64px;
@@ -178,6 +150,7 @@ html {
 /* Создание твоуртро */
 
 .about {
+    font-family: 'Montserrat', light;
     color:#05D80A;
     margin: 0 auto;
     font-size: 64px;
@@ -192,6 +165,7 @@ html {
 }
 
 .opis {
+    font-family: 'Montserrat', light;
     height: 75vh;
     max-width: 1440px;
     margin: 0 auto
@@ -199,6 +173,7 @@ html {
 }
 
 .vracham {
+    font-family: 'Montserrat', light;
     color:#05D80A;
     font-size: 48px;
     font-weight: 300;
@@ -209,6 +184,7 @@ html {
 }
 
 .opisvrach {
+    font-family: 'Montserrat', light;
     font-size: 36px;
     font-weight: 275;
     line-height: 44px;
@@ -218,6 +194,7 @@ html {
 }
 
 .pacient {
+    font-family: 'Montserrat', light;
     color:#05D80A;
     font-size: 48px;
     font-weight: 300;
@@ -229,6 +206,7 @@ html {
 }
 
 .opisclient {
+    font-family: 'Montserrat', light;
     font-size: 36px;
     font-weight: 275;
     line-height: 44px;
@@ -246,12 +224,14 @@ html {
 }
 
 .functia {
+    font-family: 'Montserrat', light;
     height: 100vh;
     max-width: 1440px;
     margin: 0 auto
 }
 
 .fanc {
+    font-family: 'Montserrat', light;
     color:#05D80A;
     margin: 0 auto;
     font-size: 64px;
