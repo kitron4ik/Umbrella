@@ -24,7 +24,7 @@ mark, audio,video {
     font-size:16px;
     line-height: 1.2;
     font-weight: normal;
-    color: #05D80A;
+    color: #05bfd8;
 }
 
 
@@ -51,7 +51,7 @@ html {
 .header {
     z-index: 3;
     border-radius: 0px 0px 20px 20px;
-    background: rgb(192, 249, 187);
+    background: rgb(187, 242, 249);
     position:fixed;
     top:0;
     left: 0;
@@ -85,7 +85,7 @@ html {
 .header_link {
     font-size: 18px;
     line-height: 24px;
-    color:#05D80A;
+    color:#05d8c6;
     text-decoration: none;
 }
 .header_link:hover, .header_link:focus, .header_link:active{
@@ -95,7 +95,7 @@ html {
 /* Стили интро */
 
 .intro {
-    height: 93vh;
+    height: 91vh;
     padding-top: 260px;
     font-size: 144px;
 
@@ -105,14 +105,14 @@ html {
     font-size: 144px;
     font-weight: 400;
     line-height: 151px;
-    color:#05D80A;
+    color:#05b8d8;
     margin-bottom: 8px;
 }
 
 .intro_subtitle {
     font-family: 'Montserrat', light;
     max-width: 617px;
-    color:#05D80A;
+    color:#05b8d8;
     font-size: 64px;
     font-weight: 275;
     line-height: 78px;
@@ -120,7 +120,7 @@ html {
 
 .greenDoctor {
     width: 670px;
-    height: 755px;
+    height: 750px;
     position: absolute;
     left: 1060px;
     right: 184.33px;
@@ -144,14 +144,14 @@ html {
     width: 1920px;
     height: 54px;
     bottom: 0px;
-    background: linear-gradient(135.00deg, rgb(255, 255, 255),rgb(53, 219, 31) 100%);
+    background: linear-gradient(135.00deg, rgb(255, 255, 255),rgb(31, 181, 219) 100%);
 }
 
 /* Создание твоуртро */
 
 .about {
     font-family: 'Montserrat', light;
-    color:#05D80A;
+    color:#05b8d8;
     margin: 0 auto;
     font-size: 64px;
     font-weight: 275;
@@ -159,7 +159,7 @@ html {
     line-height: 78px;
     margin-top: 55px;
     box-sizing: border-box;
-    border-bottom: 1px solid rgb(53, 219, 31);
+    border-bottom: 1px solid rgb(31, 197, 219);
     max-width: 200px;
     margin-bottom: 36px;
 }
@@ -174,12 +174,12 @@ html {
 
 .vracham {
     font-family: 'Montserrat', light;
-    color:#05D80A;
+    color:#05b8d8;
     font-size: 48px;
     font-weight: 300;
     line-height: 59px;
     box-sizing: border-box;
-    border-bottom: 1px solid rgb(53, 219, 31);
+    border-bottom: 1px solid rgb(31, 191, 219);
     max-width: max-content;
 }
 
@@ -189,18 +189,18 @@ html {
     font-weight: 275;
     line-height: 44px;
     max-width: 750px;
-    color:#05D80A;
+    color:#05b8d8;
     margin-top: 10px;
 }
 
 .pacient {
     font-family: 'Montserrat', light;
-    color:#05D80A;
+    color:#05b8d8;
     font-size: 48px;
     font-weight: 300;
     line-height: 59px;
     box-sizing: border-box;
-    border-bottom: 1px solid rgb(53, 219, 31);
+    border-bottom: 1px solid rgb(31, 181, 219);
     max-width: max-content;
     margin-left: 48%;
 }
@@ -211,7 +211,7 @@ html {
     font-weight: 275;
     line-height: 44px;
     max-width: 750px;
-    color:#05D80A;
+    color:#05b8d8;
     margin-left: auto;
 }
 
@@ -220,7 +220,7 @@ html {
     width: 1920px;
     height: 54px;
     bottom: -900px;
-    background: linear-gradient(135.00deg, rgb(255, 255, 255),rgb(53, 219, 31) 100%);
+    background: linear-gradient(135.00deg, rgb(255, 255, 255),rgb(31, 219, 219) 100%);
 }
 
 .functia {
@@ -231,8 +231,10 @@ html {
 }
 
 .fanc {
+    padding-top: 50px;
+    max-width: 93vh;
     font-family: 'Montserrat', light;
-    color:#05D80A;
+    color:#05b8d8;
     margin: 0 auto;
     font-size: 64px;
     font-weight: 275;
@@ -240,7 +242,7 @@ html {
     line-height: 78px;
     margin-top: 55px;
     box-sizing: border-box;
-    border-bottom: 1px solid rgb(53, 219, 31);
+    border-bottom: 1px solid rgb(31, 191, 219);
     max-width:max-content;
     margin-bottom: 36px;
 }
@@ -252,13 +254,13 @@ html {
 }
 
 .main {
-    background: linear-gradient(135.00deg, rgba(53, 219, 31, 0.2),rgba(0, 0, 0, 0) 37.405%,rgba(0, 0, 0, 0) 69.975%,rgba(53, 219, 31, 0.2) 100%),rgba(255, 255, 255, 0);
+    background: linear-gradient(135.00deg, rgba(31, 166, 219, 0.2),rgba(0, 0, 0, 0) 37.405%,rgba(0, 0, 0, 0) 69.975%,rgba(31, 181, 219, 0.2) 100%),rgba(255, 255, 255, 0);
 }
 
 .two {
-    background: linear-gradient(135.00deg, rgba(53, 219, 31, 0.2),rgba(0, 0, 0, 0) 37.405%,rgba(0, 0, 0, 0) 69.975%,rgba(53, 219, 31, 0.2) 100%),rgba(255, 255, 255, 0);
+    background: linear-gradient(135.00deg, rgba(31, 166, 219, 0.2),rgba(0, 0, 0, 0) 37.405%,rgba(0, 0, 0, 0) 69.975%,rgba(31, 181, 219, 0.2) 100%),rgba(255, 255, 255, 0);
 }
 
 .three {
-    background: linear-gradient(135.00deg, rgba(53, 219, 31, 0.2),rgba(0, 0, 0, 0) 37.405%,rgba(0, 0, 0, 0) 69.975%,rgba(53, 219, 31, 0.2) 100%),rgba(255, 255, 255, 0);
+    background: linear-gradient(135.00deg, rgba(31, 166, 219, 0.2),rgba(0, 0, 0, 0) 37.405%,rgba(0, 0, 0, 0) 69.975%,rgba(31, 181, 219, 0.2) 100%),rgba(255, 255, 255, 0);
 }

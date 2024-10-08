@@ -71,7 +71,7 @@ export default {
         font-family: 'Montserrat', light;
         border-radius: 5px 5px 5px 5px;
         border:0px;
-        background: rgb(200, 247, 210);
+        background: rgb(200, 240, 247);
     }
     button:hover {
         opacity:0.7;
@@ -82,5 +82,6 @@ export default {
         opacity: 1;
         transform: scale(0.9);
     }
+    
 </style>
 
