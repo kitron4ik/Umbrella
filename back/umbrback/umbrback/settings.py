@@ -53,10 +53,15 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 REST_FRAMEWORK = {
-    'DEFAULT_PREMISSON_CLASSES': [
-        'rest_framework.premissions.AllowAny'
-    ]
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
 }
+    
 CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'umbrback.urls'
@@ -78,6 +83,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'umbrback.wsgi.application'
+
+ASGI_APPLICATION = 'umbrback.asgi.application'
+
 
 
 # Database

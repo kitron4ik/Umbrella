@@ -8,4 +8,3 @@ class login(models.Model):
     buildcode = models.IntegerField(max_length=100)
     role = models.CharField(max_length=100)
     password = models.CharField(max_length=100)
-
