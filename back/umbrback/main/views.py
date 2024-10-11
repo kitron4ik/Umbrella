@@ -1,13 +1,13 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
-from models import login
-from serialm import loginSerializer
+from .models import login
+from .serialm import loginSerializer
 from rest_framework.response import Response
 
 # Create your views here.
-class login(APIView):
+class logins(APIView):
     def get(self, request):
-        output= [
+        output = [
             {
                 "fio": output.fio,
                 "email": output.email,
@@ -18,6 +18,7 @@ class login(APIView):
             } for output in login.objects.all()
         ]
         return Response(output)
+
     def post(self, request):
         serializer = loginSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):

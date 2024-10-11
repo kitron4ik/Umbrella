@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from models import login
+from .models import login
 
 class loginSerializer(serializers.ModelSerializer):
     class Meta:
