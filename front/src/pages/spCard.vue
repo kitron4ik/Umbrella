@@ -29,10 +29,12 @@
         </header>
         <main class="PacZap">
             <section class="DocZap">
-                    <h5 className ="Zapis">Пациенты на запись</h5>
+                    <h5 className ="Zapis">Список карт</h5>
                     <div className="CardName">
                         <p className = "Names">Гетьман Владислав Сергеевич</p>
-                        <p className ="Time">10:15</p>
+                        <p className ="desc">Ул. пушкина Дом 5 кв. 235
+                            г.р. 11.07.2005
+                        </p>
                     </div>
             </section>
         </main>
@@ -42,11 +44,11 @@
 
 <style scoped>
 
-.Time {
+.desc {
     text-align: center;
     display: flex;
-    margin: 25% 0 0 28%;
-    font-size: 100px;
+    margin: 10% 30% 50% 30%;
+    font-size: 40px;
 }
 .Names {
     display: flex;
@@ -64,7 +66,7 @@
         margin-top: 0px; */
         box-sizing: border-box;
         border-bottom: 1px solid rgb(31, 197, 219);
-        max-width: 700px;
+        max-width: 430px;
         margin-bottom: 25px;
         
 }

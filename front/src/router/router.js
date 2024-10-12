@@ -3,7 +3,10 @@ import { createRouter, createWebHistory } from "vue-router"
 import DoctorPage from "@/pages/DoctorPage.vue";
 import Pacient from "@/pages/Pacient.vue";
 import PacZap from "@/pages/PacZap.vue";
-import DrGr from "@/pages/drGr.vue";
+import drGr from "@/pages/drGr.vue";
+import spCard from "@/pages/spCard.vue";
+import ZapPrim from "@/pages/ZapPrim.vue";
+import MyCard from "@/pages/MyCard.vue";
 
 
 const routes = [
@@ -25,7 +28,19 @@ const routes = [
     },
     {
         path: '/docGr',
-        component: DrGr
+        component: drGr
+    },
+    {
+        path: '/spCard',
+        component: spCard
+    },
+    {
+        path: '/zp',
+        component: ZapPrim
+    },
+    {
+        path: '/MyCard',
+        component: MyCard
     }
 ]
 
