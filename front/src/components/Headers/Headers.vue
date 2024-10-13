@@ -33,28 +33,31 @@ export default {
         <div class="header_wrapper">
           <div class="header_logo">
             <a href="/" class="header_logo_link">
-              <img src="../../assets/png/logo.png" alt="logo">
+              <img src="../../assets/png/logo.png" alt="logo" className="Logo">
             </a>
           </div>
           <nav class="header_nav">
             <ul class="header_list">
               <li class="header_item">
-                <a href="#" class="header_link">о нас</a>
+                <a href="#" class="header_link Onas">О НАС</a>
               </li>
               <li class="header_item">
-                <a href="#" class="header_link">функционал</a>
+                <a href="#" class="header_link funcc">ФУНКЦИОНАЛ</a>
+              </li>
+              <div className="authButton">
+                <li class="header_item">
+                <button class="header_link registerButton" @click="openRegister">РЕГИСТРАЦИЯ</button>
               </li>
               <li class="header_item">
-                <button class="header_link" @click="openRegister">Регистрация</button>
+                <button class="header_link loginButton" @click="openLogin">ВХОД</button>
               </li>
-              <li class="header_item">
-                <button class="header_link" @click="openLogin">Вход</button>
-              </li>
+              </div>
+              
             </ul>
           </nav>
         </div>
       </div>
-  
+      
       <!-- Компонент login, который отображает pop-up -->
       <login 
         v-if="isPopUpVisible" 
@@ -66,13 +69,48 @@ export default {
 </template>
 
 <style scoped>
+.Logo {
+    margin:0 auto;
+    max-width: 75px;
+    max-height: 75px;
+}
 
-    button {
-        font-family: 'Montserrat', light;
-        border-radius: 5px 5px 5px 5px;
-        border:0px;
-        background: rgb(200, 240, 247);
-    }
+.authButton {
+  display: flex;
+  margin-right: 150px;
+  margin-top:18px;
+
+}
+
+.header_link.funcc {
+  margin-top: 22px;
+  position:absolute;
+  right: 40%;
+}
+
+.header_link.Onas {
+  position:absolute;
+  right: 60%;
+  margin-top: 22px;
+}
+
+.header_link.registerButton {
+  margin: 0 auto;
+  padding:5px;
+  border: 1px solid #00C9AD;
+  background: rgb(255, 255, 255);
+  font-family: 'Montserrat', light;
+  border-radius: 10px;
+}
+.header_link.loginButton {
+  padding:5px;
+  border: 1px solid #00C9AD;
+  background: #00C9AD;
+  font-family: 'Montserrat', light;
+  border-radius: 10px;
+  color: white;
+}
+
     button:hover {
         opacity:0.7;
         transform:scale(1.1);
