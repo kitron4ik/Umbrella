@@ -1,11 +1,11 @@
 <template>
-    <div>
-        <header class="header">
+  <div>
+    <header class="header">
             <div class="wrapper">
                 <div class="header_wrapper">
                     <div class="header_logo">
                         <a href="/" class="header_logo_link">
-                            <img src="../assets/png/logo.png" alt="logo" />
+                            <img src="../../assets/png/logo.png" alt="logo" />
                         </a>
                     </div>
                     <nav class="header_nav">
@@ -27,12 +27,13 @@
                 </div>
             </div>
         </header>
-
-    </div>
+  </div>
 </template>
 
 <script>
+export default {
 
+}
 </script>
 
 <style>

@@ -1,46 +1,37 @@
-import Main from "@/pages/Main.vue";
 import { createRouter, createWebHistory } from "vue-router"
-import DoctorPage from "@/pages/DoctorPage.vue";
-import Pacient from "@/pages/Pacient.vue";
-import PacZap from "@/pages/PacZap.vue";
-import drGr from "@/pages/drGr.vue";
-import spCard from "@/pages/spCard.vue";
-import ZapPrim from "@/pages/ZapPrim.vue";
-import MyCard from "@/pages/MyCard.vue";
-
 
 const routes = [
     {
         path: '/',
-        component: Main
+        component: () => import('../pages/Main.vue'),
     },
     {
         path: '/dp',
-        component: DoctorPage
+        component: () => import('../pages/DrPages/DoctorPage.vue'),
     },
     {
         path: '/pp',
-        component: Pacient
+        component: () => import('../pages/Pacient/Pacient.vue'),
     },
     {
         path: '/pz',
-        component: PacZap
+        component: () => import('../pages/DrPages/PacZap.vue'),
     },
     {
         path: '/docGr',
-        component: drGr
+        component: () => import('../pages/DrPages/drGr.vue'),
     },
     {
         path: '/spCard',
-        component: spCard
+        component: () => import('../pages/DrPages/spCard.vue'),
     },
     {
         path: '/zp',
-        component: ZapPrim
+        component: () => import('../pages/Pacient/ZapPrim.vue'),
     },
     {
         path: '/MyCard',
-        component: MyCard
+        component: () => import('../pages/Pacient/MyCard.vue'),
     }
 ]
 

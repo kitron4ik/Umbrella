@@ -10,7 +10,7 @@
         <section id="func">
             <div class="functia">
                 <h4 class="fanc">Функционал</h4>
-                <img src="../assets/png/card.png" alt="card" class="card"/>
+                <img src="../../assets/png/card.png" alt="card" class="card"/>
             </div>
         </section>
     </main>

@@ -8,8 +8,10 @@
   },
   "dependencies": {
     "@syncfusion/ej2-vue-calendars": "^27.1.51",
+    "bootstrap": "^5.3.3",
     "core-js": "^3.8.3",
     "vue": "^3.2.13",
+    "vue-flatpickr-component": "^11.0.5",
     "vue-router": "^4.0.3",
     "vue3-datepicker": "^0.4.0",
     "vuex": "^4.0.0"

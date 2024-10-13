@@ -5,7 +5,7 @@
               <div class="header_wrapper">
                   <div class="header_logo">
                       <a href="/" class="header_logo_link">
-                          <img src="../assets/png/logo.png" alt="logo">
+                          <img src="../../assets/png/logo.png" alt="logo">
                       </a>
                   </div>
                   <nav class="header_nav">
@@ -58,7 +58,7 @@
   }
   </script>
   
-  <style>
+  <style scoped>
   /* margin: 30vh Вниз 30vh 30vh 30vh вправо; */
   .appointment-form {
     margin: 30vh 0vh 0vh 100vh;

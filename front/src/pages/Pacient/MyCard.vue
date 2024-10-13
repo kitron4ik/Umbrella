@@ -5,7 +5,7 @@
             <div class="header_wrapper">
                 <div class="header_logo">
                     <a href="/" class="header_logo_link">
-                        <img src="../assets/png/logo.png" alt="logo">
+                        <img src="../../assets/png/logo.png" alt="logo">
                     </a>
                 </div>
                 <nav class="header_nav">
@@ -29,7 +29,7 @@
         <section id="func">
             <div class="functia">
                 <h4 class="MyCard">Моя карта</h4>
-                <img src="../assets/png/card.png" alt="card" class="card"/>
+                <img src="../../assets/png/card.png" alt="card" class="card"/>
             </div>
         </section>
     </main>
