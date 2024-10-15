@@ -94,9 +94,9 @@ ASGI_APPLICATION = 'umbrback.asgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': BASE_DIR / 'db.umbrella',
+        'NAME': 'umbrella',
         'USER': 'root',
-        'PASSWORD': 'root',
+        'PASSWORD': '052308911',
         'HOST': 'localhost',
         'PORT': '3306',
     }

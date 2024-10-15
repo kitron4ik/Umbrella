@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
-from .models import login
+from .models import Reg
 from .serialm import loginSerializer
 from rest_framework.response import Response
 
@@ -15,7 +15,7 @@ class logins(APIView):
                 "buildcode": output.buildcode,
                 "role": output.role,
                 "password": output.password
-            } for output in login.objects.all()
+            } for output in Reg.objects.all()
         ]
         return Response(output)
 
