@@ -5,11 +5,11 @@
 
       <div v-if="isRegister" class="PopReg">
         <h2>Регистрация</h2>
-        <form @submit.prevent="handleSubmit">
-          <input type="text" class="group" v-model="name" placeholder="ФИО" required />
+        <form @submit.prevent="login" method="POST">
+          <input type="text" class="group" v-model="regname" placeholder="ФИО" required />
           <input type="email" class="group" v-model="email" placeholder="Email" required />
-          <input type="text" class="group" v-model="buildingCode" placeholder="Код здания" required />
-          <input type="text" class="group" v-model="roleCode" placeholder="Код роли" required />
+          <input type="text" class="group" v-model="building_Code" placeholder="Код здания" required />
+          <input type="text" class="group" v-model="role_Code" placeholder="Код роли" required />
           <input type="text" class="group" v-model="role" placeholder="Роль" required />
           <input type="password" class="group" v-model="password" placeholder="Пароль" required />
           <button type="submit" class="button-48" role="button"><span class="text">Зарегистрироваться</span></button>
@@ -18,7 +18,7 @@
 
       <div v-else class="PopLog">
         <h2>Вход</h2>
-        <form @submit.prevent="handleSubmit">
+        <form @submit.prevent="login">
           <input type="email" class="group" v-model="email" placeholder="Email" required />
           <input type="password" class="group" v-model="password" placeholder="Пароль" required />
           <button type="submit" class="button-48"><span class="text">Войти</span></button>
@@ -29,6 +29,9 @@
 </template>
 
 <script>
+import axios from 'axios';
+// import api from '@services/api';
+
 export default {
   props: {
     isVisible: Boolean,
@@ -36,21 +39,45 @@ export default {
   },
   data() {
     return {
-      name: '',
+      regname: '',
       email: '',
-      buildingCode: '',
-      roleCode: '',
+      building_Code: '',
+      role_Code: '',
       role: '',
       password: '',
     };
   },
   methods: {
+    // Метод для отправки данных формы на сервер
+    async login() {
+      try {
+        // Создаем объект с данными для отправки
+        const payload = {
+          regname: this.regname,
+          email: this.email,
+          building_Code: this.building_Code,
+          role_Code: this.role_Code,
+          role: this.role,
+          password: this.password,
+        };
+        
+        // Отправляем POST-запрос на сервер
+        const response = await axios.post('/localhost:8000/admin/', payload);
+        
+        // Логируем ответ от сервера
+        console.log(response.data);
+        
+        // Закрываем всплывающее окно после успешной отправки
+        this.closePopUp();
+      } catch (error) {
+        // Обрабатываем ошибки при отправке данных
+        console.error('Ошибка при отправке данных:', error);
+      }
+    },
+    
+    // Метод для закрытия всплывающего окна
     closePopUp() {
       this.$emit('close');
-    },
-    handleSubmit() {
-      // Логика обработки формы
-      this.closePopUp();
     },
   },
 };

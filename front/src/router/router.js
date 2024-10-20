@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router"
+import Login from "@/components/Glavnaya/login.vue";
 
 const routes = [
+    {path:'/admin',component: Login},
     {
         path: '/',
         component: () => import('../pages/Main.vue'),
