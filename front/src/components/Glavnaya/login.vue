@@ -12,7 +12,7 @@
           <input type="text" class="group" v-model="role_Code" placeholder="Код роли" required />
           <input type="text" class="group" v-model="role" placeholder="Роль" required />
           <input type="password" class="group" v-model="password" placeholder="Пароль" required />
-          <button type="submit" class="button-48" role="button"><span class="text">Зарегистрироваться</span></button>
+          <button type="submit" class="button-48" role="button" ><span class="text">Зарегистрироваться</span></button>
         </form>
       </div>
 
@@ -30,7 +30,6 @@
 
 <script>
 import axios from 'axios';
-// import api from '@services/api';
 
 export default {
   props: {
@@ -45,42 +44,52 @@ export default {
       role_Code: '',
       role: '',
       password: '',
+      loginUsername: '',  // Для входа
+      loginPassword: '',
     };
   },
   methods: {
-    // Метод для отправки данных формы на сервер
-    async login() {
+    // Метод для отправки данных формы на сервер (регистрация)
+    async registerUser() {
       try {
-        // Создаем объект с данными для отправки
-        const payload = {
+        const response = await axios.post('http://localhost:8000/api/register/', {
           regname: this.regname,
           email: this.email,
-          building_Code: this.building_Code,
-          role_Code: this.role_Code,
+          building_Code:this.building_Code,
+          role_Code:this.role_Code,
           role: this.role,
           password: this.password,
-        };
-        
-        // Отправляем POST-запрос на сервер
-        const response = await axios.post('/localhost:8000/admin/', payload);
-        
-        // Логируем ответ от сервера
-        console.log(response.data);
-        
-        // Закрываем всплывающее окно после успешной отправки
-        this.closePopUp();
+
+          
+        });
+        alert(response.data.message);  // Уведомление об успешной регистрации
       } catch (error) {
-        // Обрабатываем ошибки при отправке данных
-        console.error('Ошибка при отправке данных:', error);
+        console.error(error.response.data);  // Лог ошибок
       }
     },
-    
+
+    // Метод для отправки данных на сервер (вход)
+    async loginUser() {
+      try {
+        const response = await axios.post('http://localhost:8000/api/login/', {
+          username: this.loginUsername,  // Используется loginUsername
+          password: this.loginPassword   // Используется loginPassword
+        });
+        const token = response.data.token;
+        localStorage.setItem('token', token);  // Сохранение токена в localStorage
+        this.$router.push({ name: 'pp' });  // Перенаправление на дашборд
+      } catch (error) {
+        console.error(error.response.data);  // Лог ошибок
+      }
+    },
+
     // Метод для закрытия всплывающего окна
     closePopUp() {
       this.$emit('close');
     },
-  },
+  }
 };
+
 </script>
 
 <style scoped>

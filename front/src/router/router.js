@@ -1,8 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router"
 import Login from "@/components/Glavnaya/login.vue";
+import pp from '../pages/Pacient/Pacient.vue'
 
 const routes = [
-    {path:'/admin',component: Login},
+    { path: '/login', name: 'login', component: Login },
+    { path: '/pp', name: 'pp', component: pp },
     {
         path: '/',
         component: () => import('../pages/Main.vue'),

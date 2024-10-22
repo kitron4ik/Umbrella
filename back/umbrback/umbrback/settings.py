@@ -104,13 +104,13 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'umbrella',
         'USER': 'root',
-        'PASSWORD': '052308911',
+        'PASSWORD': '1212',
         'HOST': 'localhost',
         'PORT': '3306',
     }
 }
 
-
+AUTH_USER_MODEL = 'main.Reg'
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 

@@ -8,8 +8,10 @@
   },
   "dependencies": {
     "@syncfusion/ej2-vue-calendars": "^27.1.51",
+    "@vueuse/core": "^11.1.0",
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
+    "cookie": "^1.0.1",
     "core-js": "^3.8.3",
     "vue": "^3.2.13",
     "vue-flatpickr-component": "^11.0.5",
