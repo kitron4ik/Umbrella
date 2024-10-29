@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class Reg(models.Model):
+class RegUser(models.Model):
     regname = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     role_code = models.IntegerField()  

@@ -13,6 +13,7 @@
           <input type="text" class="group" v-model="role" placeholder="Роль" required />
           <input type="password" class="group" v-model="password" placeholder="Пароль" required />
           <button type="submit" class="button-48" role="button"><span class="text">Зарегистрироваться</span></button>
+          <a href="{% url 'about' %}">Зарегистрироваться</a>
         </form>
       </div>
 
@@ -49,6 +50,7 @@ export default {
   },
   methods: {
     // Метод для отправки данных формы на сервер
+    
     async login() {
       try {
         // Создаем объект с данными для отправки
