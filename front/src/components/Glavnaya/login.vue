@@ -8,13 +8,32 @@
         <form @submit.prevent="login" method="POST">
           <input type="text" class="group" v-model="regname" placeholder="ФИО" required />
           <input type="email" class="group" v-model="email" placeholder="Email" required />
-          <input type="text" class="group" v-model="building_Code" placeholder="Код здания" required />
-          <input type="text" class="group" v-model="role_Code" placeholder="Код роли" required />
-          <input type="text" class="group" v-model="role" placeholder="Роль" required />
+          <input
+            type="text"
+            class="group"
+            v-model="building_Code"
+            placeholder="Код здания"
+            required
+            @input="checkBuildingCode"
+          />
+          <input
+            type="text"
+            class="group"
+            v-model="role_Code"
+            placeholder="Код роли"
+            :disabled="!canEnterRoleCode"
+            @input="setRole"
+          />
+          <input
+            type="text"
+            class="group"
+            v-model="role"
+            placeholder="Роль"
+            required
+            readonly
+          />
           <input type="password" class="group" v-model="password" placeholder="Пароль" required />
-          <a href="{% url 'login' %}">
-            <button type="submit" class="button-48" role="button"><span class="text">Зарегистрироваться</span></button>
-          </a>
+          <button type="submit" class="button-48"><span class="text">Зарегистрироваться</span></button>
         </form>
       </div>
 
@@ -55,9 +74,29 @@ export default defineComponent({
       role_Code: '',
       role: '',
       password: '',
+      canEnterRoleCode: false, // Флаг для активации поля role_Code
     };
   },
   methods: {
+    // Метод для проверки кода здания
+    checkBuildingCode() {
+      // Активируем поле role_Code только если building_Code равен "001"
+      this.canEnterRoleCode = this.building_Code === '001';
+      if (!this.canEnterRoleCode) {
+        this.role_Code = ''; // Очистка role_Code если building_Code неверный
+        this.role = ''; // Очистка роли, если код здания неверный
+      }
+    },
+    // Метод для установки роли на основе кода роли
+    setRole() {
+      if (this.role_Code === '001') {
+        this.role = 'пациент';
+      } else if (this.role_Code === '002') {
+        this.role = 'доктор';
+      } else {
+        this.role = ''; // Очистка роли, если введен неверный код
+      }
+    },
     // Метод для отправки данных формы на сервер
     async login() {
       try {
@@ -69,7 +108,6 @@ export default defineComponent({
           role_code: this.role_Code,
           role: this.role,
           password: this.password,
-          
         };
         console.log('Отправляемый payload:', payload);
 
@@ -78,19 +116,25 @@ export default defineComponent({
           headers: {
             'Content-Type': 'application/json',
           },
-    });
-        
+        });
+
         // Логируем ответ от сервера
         console.log(response.data);
-        
+
         // Закрываем всплывающее окно после успешной отправки
         this.closePopUp();
+
+        // Перенаправление пользователя в зависимости от его роли
+        if (this.role === 'пациент') {
+          this.$router.push('/pp');
+        } else if (this.role === 'доктор') {
+          this.$router.push('/dp');
+        }
       } catch (error) {
         // Обрабатываем ошибки при отправке данных
         console.error('Ошибка при отправке данных:', error);
       }
     },
-    
     // Метод для закрытия всплывающего окна
     closePopUp() {
       this.$emit('close');
@@ -98,6 +142,9 @@ export default defineComponent({
   },
 });
 </script>
+
+
+
 
 
 <style scoped>
