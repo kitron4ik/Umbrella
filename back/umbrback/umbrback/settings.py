@@ -56,8 +56,6 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
-    
-   
 ]
 
 REST_FRAMEWORK = {
@@ -72,7 +70,7 @@ REST_FRAMEWORK = {
     
 CORS_ALLOW_ALL_ORIGIN = True
 
-CORS_ALLOW_CREDENTIALS = True
+# CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_METHODS = [
     "GET",
@@ -84,7 +82,8 @@ CORS_ALLOWED_METHODS = [
 ]
 
 CORS_ALLOW_HEADERS = [
-"Content-Type: application/json",
+    "Content-Type",
+    'Authorization',
 ]
 
 ROOT_URLCONF = 'umbrback.urls'
@@ -117,7 +116,7 @@ ASGI_APPLICATION = 'umbrback.asgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'umbrella',
+        'NAME': 'test_db',
         'USER': 'root',
         'PASSWORD': '052308911',
         'HOST': 'localhost',

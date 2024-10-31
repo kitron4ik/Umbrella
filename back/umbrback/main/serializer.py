@@ -2,7 +2,6 @@ from rest_framework import serializers
 from .models import RegUser
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
-from django.core.exceptions import ValidationError
 
 class LoginSerializer(serializers.ModelSerializer):
     class Meta:

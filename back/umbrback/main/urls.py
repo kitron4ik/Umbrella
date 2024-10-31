@@ -7,5 +7,4 @@ from django.shortcuts import redirect
 
 urlpatterns = [
      path('login/', views.login_view),
-     
 ]

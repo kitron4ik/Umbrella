@@ -12,8 +12,9 @@
           <input type="text" class="group" v-model="role_Code" placeholder="Код роли" required />
           <input type="text" class="group" v-model="role" placeholder="Роль" required />
           <input type="password" class="group" v-model="password" placeholder="Пароль" required />
-          <button type="submit" class="button-48" role="button"><span class="text">Зарегистрироваться</span></button>
-          <a href="{% url 'about' %}">Зарегистрироваться</a>
+          <a href="{% url 'login' %}">
+            <button type="submit" class="button-48" role="button"><span class="text">Зарегистрироваться</span></button>
+          </a>
         </form>
       </div>
 
@@ -31,12 +32,20 @@
 
 <script>
 import axios from 'axios';
-// import api from '@services/api';
+import { defineComponent } from 'vue';
 
-export default {
+axios.defaults.baseURL = 'http://localhost:8000';
+
+export default defineComponent({
   props: {
-    isVisible: Boolean,
-    isRegister: Boolean,
+    isVisible: {
+      type: Boolean,
+      default: false,
+    },
+    isRegister: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -50,21 +59,26 @@ export default {
   },
   methods: {
     // Метод для отправки данных формы на сервер
-    
     async login() {
       try {
         // Создаем объект с данными для отправки
         const payload = {
           regname: this.regname,
           email: this.email,
-          building_Code: this.building_Code,
-          role_Code: this.role_Code,
+          building_code: this.building_Code,
+          role_code: this.role_Code,
           role: this.role,
           password: this.password,
+          
         };
-        
+        console.log('Отправляемый payload:', payload);
+
         // Отправляем POST-запрос на сервер
-        const response = await axios.post('/localhost:8000/admin/', payload);
+        const response = await axios.post('api/login/', payload, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+    });
         
         // Логируем ответ от сервера
         console.log(response.data);
@@ -82,8 +96,9 @@ export default {
       this.$emit('close');
     },
   },
-};
+});
 </script>
+
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap');
@@ -136,7 +151,6 @@ h2 {
   border-radius: 5px;
   font-size: 16px;
 }
-
 .button-48 {
   display: inline-block;
   padding: 10px 20px;
