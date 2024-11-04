@@ -135,6 +135,33 @@ export default defineComponent({
         console.error('Ошибка при отправке данных:', error);
       }
     },
+    async login() {
+      try {
+        const payload = {
+          email: this.email,
+          password: this.password,
+        };
+
+        // Отправка данных для входа
+        const response = await axios.post('/api/log/', payload, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        console.log('Ответ от сервера:', response.data);
+        this.closePopUp();
+
+        // Перенаправление пользователя в зависимости от роли
+        if (response.data.role === 'пациент') {
+          this.$router.push('/pp');
+        } else if (response.data.role === 'доктор') {
+          this.$router.push('/dp');
+        }
+      } catch (error) {
+        console.error('Ошибка при входе:', error);
+      }
+    },
     // Метод для закрытия всплывающего окна
     closePopUp() {
       this.$emit('close');
