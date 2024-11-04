@@ -1,8 +1,12 @@
 <template>
+  <div>
     <div class="calendar-container">
       <HeaderDoc />
       <Calendar />
     </div>
+    
+  </div>
+    
   </template>
   
   <script>
@@ -10,15 +14,23 @@
   import Calendar from '@/components/calendar.vue';
 
   
-  export default {
+  export default ({
     components: {
       HeaderDoc,
       Calendar,
     },
-  }
+    
+  })
   </script>
   
   <style scoped>
+  .saveCallendar {
+  display: flex;
+  border: 1px solid #00C9AD;
+  background: rgb(255, 255, 255);
+  font-family: 'Montserrat', light;
+  border-radius: 10px;
+}
   .calendar-container {
     display: flex;
     justify-content: center;

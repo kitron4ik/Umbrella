@@ -1,57 +1,82 @@
 <template>
-  <div>
-    <header class="header">
+    <div>
+      <header class="header">
         <div class="wrapper">
-            <div class="header_wrapper">
-                <div class="header_logo">
-                    <a href="/" class="header_logo_link">
-                        <img src="../../assets/png/logo.png" alt="logo">
-                    </a>
-                </div>
-                <nav class="header_nav">
-                    <ul class="header_list">
-                        <li class="header_item">
-                            <a href="/dp" class="header_link">Мой профиль</a>
-                        </li>
-                        <li class="header_item">
-                            <a href="/pz" class="header_link">Пациенты на запись</a>
-                        </li>
-                        <li class="header_item">
-                            <a href="/docGr" class="header_link" id="openRegister">Мой график</a>
-                        </li>
-                        <li class="header_item">
-                            <a href="/spCard" class="header_link" id="openLogin">Список карт</a>
-                        </li>
-                    </ul>
-                </nav>
+          <div class="header_wrapper">
+            <div class="header_logo">
+              <a href="/" class="header_logo_link">
+                <img src="../../assets/png/logo.png" alt="logo" />
+              </a>
             </div>
+            <nav class="header_nav">
+              <ul class="header_list">
+                <li class="header_item">
+                  <a href="/dp" class="header_link">Мой профиль</a>
+                </li>
+                <li class="header_item">
+                  <a href="/pz" class="header_link">Пациенты на запись</a>
+                </li>
+                <li class="header_item">
+                  <a href="/docGr" class="header_link" id="openRegister">Мой график</a>
+                </li>
+                <li class="header_item">
+                  <a href="/spCard" class="header_link" id="openLogin">Список карт</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
         </div>
-    </header>
-
-    <main class="main">
+      </header>
+  
+      <main class="main">
         <section class="Doc">
-            <div className ="WC">
-                <h5 className="WelCome">Добро пожаловать в личный кабинет</h5>
-            </div>
-            <div>
-                <input type="text" class="group" v-model="name" placeholder="ФИО" required />
-                <input type="email" class="group" v-model="email" placeholder="Email" required />
-                <input type="text" class="group" v-model="buildingCode" placeholder="Поликлиника" required />
-                <input type="text" class="group" v-model="role" placeholder="Роль" required />
-            </div>
-            <div className="Cilindr">
-                
-            </div>
+          <div class="WC">
+            <h5 class="WelCome">Добро пожаловать в личный кабинет</h5>
+          </div>
+          <div>
+            <input type="text" class="group" v-model="name" placeholder="ФИО" readonly />
+            <input type="email" class="group" v-model="email" placeholder="Email" readonly />
+            <input type="text" class="group" v-model="buildingCode" placeholder="Поликлиника" readonly />
+            <input type="text" class="group" v-model="role" placeholder="Роль" readonly />
+          </div>
+          <div class="Cilindr"></div>
         </section>
-    </main>
-  </div>
-</template>
-
-<script>
-export default {
-
-}
-</script>
+      </main>
+    </div>
+  </template>
+  
+  <script>
+  import axios from "axios";
+  
+  export default {
+    data() {
+      return {
+        name: "",
+        email: "",
+        buildingCode: "",
+        role: "",
+      };
+    },
+    mounted() {
+      this.fetchUserData();
+    },
+    methods: {
+      async fetchUserData() {
+        try {
+          const response = await axios.get("api/user-profile/");
+  
+          const data = response.data;
+          this.name = data.name;
+          this.email = data.email;
+          this.buildingCode = data.building_code;
+          this.role = data.role;
+        } catch (error) {
+          console.error("Ошибка при получении данных пользователя:", error);
+        }
+      },
+    },
+  };
+  </script>
 
 <style scoped>
 .Cilindr {
