@@ -4,42 +4,42 @@
       <span class="close" @click="closePopUp">&times;</span>
 
       <div v-if="isRegister" class="PopReg">
-        <h2>Регистрация</h2>
-        <form @submit.prevent="login" method="POST">
-          <input type="text" class="group" v-model="regname" placeholder="ФИО" required />
-          <input type="email" class="group" v-model="email" placeholder="Email" required />
-          <input
-            type="text"
-            class="group"
-            v-model="building_Code"
-            placeholder="Код здания"
-            required
-            @input="checkBuildingCode"
-          />
-          <input
-            type="text"
-            class="group"
-            v-model="role_Code"
-            placeholder="Код роли"
-            :disabled="!canEnterRoleCode"
-            @input="setRole"
-          />
-          <input
-            type="text"
-            class="group"
-            v-model="role"
-            placeholder="Роль"
-            required
-            readonly
-          />
-          <input type="password" class="group" v-model="password" placeholder="Пароль" required />
-          <button type="submit" class="button-48"><span class="text">Зарегистрироваться</span></button>
-        </form>
-      </div>
+    <h2>Регистрация</h2>
+    <form @submit.prevent="login" method="POST">
+      <input type="text" class="group" v-model="regname" placeholder="ФИО" required />
+      <input type="email" class="group" v-model="email" placeholder="Email" required />
+      <input
+        type="text"
+        class="group"
+        v-model="building_Code"
+        placeholder="Код здания"
+        required
+        @input="checkBuildingCode"
+      />
+      <input
+        type="text"
+        class="group"
+        v-model="role_Code"
+        placeholder="Код роли"
+        :disabled="!canEnterRoleCode"
+        @input="setRole"
+      />
+      <input
+        type="text"
+        class="group"
+        v-model="role"
+        placeholder="Роль"
+        required
+        readonly
+      />
+      <input type="password" class="group" v-model="password" placeholder="Пароль" required />
+      <button type="submit" class="button-48"><span class="text">Зарегистрироваться</span></button>
+    </form>
+  </div>
 
       <div v-else class="PopLog">
         <h2>Вход</h2>
-        <form @submit.prevent="login">
+        <form @submit.prevent="log">
           <input type="email" class="group" v-model="email" placeholder="Email" required />
           <input type="password" class="group" v-model="password" placeholder="Пароль" required />
           <button type="submit" class="button-48"><span class="text">Войти</span></button>
@@ -52,6 +52,7 @@
 <script>
 import axios from 'axios';
 import { defineComponent } from 'vue';
+import { useUserStore } from '@/stores/userStore';
 
 axios.defaults.baseURL = 'http://localhost:8000';
 
@@ -74,105 +75,82 @@ export default defineComponent({
       role_Code: '',
       role: '',
       password: '',
-      canEnterRoleCode: false, // Флаг для активации поля role_Code
+      canEnterRoleCode: false,
     };
   },
   methods: {
-    // Метод для проверки кода здания
     checkBuildingCode() {
-      // Активируем поле role_Code только если building_Code равен "001"
       this.canEnterRoleCode = this.building_Code === '001';
       if (!this.canEnterRoleCode) {
-        this.role_Code = ''; // Очистка role_Code если building_Code неверный
-        this.role = ''; // Очистка роли, если код здания неверный
+        this.role_Code = '';
+        this.role = '';
       }
     },
-    // Метод для установки роли на основе кода роли
     setRole() {
       if (this.role_Code === '001') {
         this.role = 'пациент';
       } else if (this.role_Code === '002') {
         this.role = 'доктор';
       } else {
-        this.role = ''; // Очистка роли, если введен неверный код
+        this.role = '';
       }
     },
-    // Метод для отправки данных формы на сервер
     async login() {
+      const userStore = useUserStore();
+      
+      const payload = {
+        regname: this.regname,
+        email: this.email,
+        building_code: this.building_Code,
+        role_code: this.role_Code,
+        role: this.role,
+        password: this.password,
+      };
       try {
-        // Создаем объект с данными для отправки
-        const payload = {
-          regname: this.regname,
-          email: this.email,
-          building_code: this.building_Code,
-          role_code: this.role_Code,
-          role: this.role,
-          password: this.password,
-        };
         console.log('Отправляемый payload:', payload);
+        const data = await userStore.login(payload);
+        console.log('Ответ от сервера: ', data);
 
-        // Отправляем POST-запрос на сервер
-        const response = await axios.post('api/login/', payload, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        // Логируем ответ от сервера
-        console.log(response.data);
-
-        // Закрываем всплывающее окно после успешной отправки
         this.closePopUp();
 
         // Перенаправление пользователя в зависимости от его роли
-        if (this.role === 'пациент') {
+        if (userStore.role === 'пациент') {
           this.$router.push('/pp');
-        } else if (this.role === 'доктор') {
+        } else if (userStore.role === 'доктор') {
           this.$router.push('/dp');
         }
       } catch (error) {
-        // Обрабатываем ошибки при отправке данных
         console.error('Ошибка при отправке данных:', error);
       }
     },
-    async login() {
+    async log() {
+      const userStore = useUserStore();
+      const payload = {
+        email: this.email,
+        password: this.password,
+      };
       try {
-        const payload = {
-          email: this.email,
-          password: this.password,
-        };
+        const data = await userStore.log(payload);
+        console.log('Ответ от сервера:', data);
 
-        // Отправка данных для входа
-        const response = await axios.post('/api/log/', payload, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        console.log('Ответ от сервера:', response.data);
         this.closePopUp();
 
         // Перенаправление пользователя в зависимости от роли
-        if (response.data.role === 'пациент') {
+        if (userStore.role === 'пациент') {
           this.$router.push('/pp');
-        } else if (response.data.role === 'доктор') {
+        } else if (userStore.role === 'доктор') {
           this.$router.push('/dp');
         }
       } catch (error) {
         console.error('Ошибка при входе:', error);
       }
     },
-    // Метод для закрытия всплывающего окна
     closePopUp() {
       this.$emit('close');
     },
   },
 });
 </script>
-
-
-
-
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap');

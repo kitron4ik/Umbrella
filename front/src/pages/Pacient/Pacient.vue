@@ -28,7 +28,7 @@
     <main class="main">
         <section class="Doc">
             <div className ="WC">
-                <h5 className="WelCome">Добро пожаловать в личный кабинет</h5>
+                <h5 className="WelCome">Добро пожаловать в личный кабинет {{ userStore.regname }} </h5>
             </div>
             <div>
                 <input type="text" class="group" v-model="name" placeholder="ФИО" required />
@@ -45,9 +45,16 @@
 </template>
 
 <script>
-export default {
+import { useUserStore } from '@/stores/userStore';
 
-}
+export default {
+  setup() {
+    const userStore = useUserStore();
+    return {
+      userStore,
+    };
+  },
+};
 </script>
 
 <style scoped>
