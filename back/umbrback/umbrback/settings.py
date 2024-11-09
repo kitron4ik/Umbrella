@@ -56,6 +56,7 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
+    "http://192.168.0.108:8080/"
 ]
 
 REST_FRAMEWORK = {

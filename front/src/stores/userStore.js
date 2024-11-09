@@ -24,7 +24,6 @@ export const useUserStore = defineStore('user', {
       this.token = userData.token;
       this.isAuthenticated = true; // Помечаем пользователя как авторизованного
       this.lastActivity = Date.now();
-      // Сохраняем токен и данные в localStorage
       localStorage.setItem('token', userData.token);
     },
     clearUserData() {
@@ -47,13 +46,18 @@ export const useUserStore = defineStore('user', {
             'Content-Type': 'application/json',
           },
         });
-
+        
         // Сохранение данных пользователя и токена в хранилище
         this.setUserData({
           ...response.data.userData,
+          role: response.data.role,
           token: response.data.token,
         });
-
+        if (this.role === 'пациент') {
+            this.$router.push('/pp'); // Направляем на страницу пациента
+          } else if (this.role === 'доктор') {
+            this.$router.push('/dp'); // Направляем на страницу доктора
+          }
         return response.data;
       } catch (error) {
         console.error('Ошибка при входе:', error);

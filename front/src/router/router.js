@@ -53,12 +53,10 @@ const router = createRouter({
 // Проверка авторизации перед каждым переходом
 router.beforeEach((to, from, next) => {
     const userStore = useUserStore();
-  
-    // Проверка, если маршрут требует авторизации и пользователь не авторизован
     if (to.meta.requiresAuth && !userStore.isAuthenticated) {
-        next('/'); // Перенаправление на главную страницу
+        next('/'); 
     } else {
-        next(); // Разрешение перехода
+        next(); 
     }
 });
 
