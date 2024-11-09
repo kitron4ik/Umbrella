@@ -11,7 +11,8 @@ export const useUserStore = defineStore('user', {
     password: '',
     token: localStorage.getItem('token') || null,
     isAuthenticated: !!localStorage.getItem('token'), // true, если есть токен
-  }),
+    inactivityTimeout:600000,
+}),
   actions: {
     setUserData(userData) {
       this.regname = userData.regname;
@@ -22,7 +23,7 @@ export const useUserStore = defineStore('user', {
       this.password = userData.password;
       this.token = userData.token;
       this.isAuthenticated = true; // Помечаем пользователя как авторизованного
-
+      this.lastActivity = Date.now();
       // Сохраняем токен и данные в localStorage
       localStorage.setItem('token', userData.token);
     },
@@ -35,7 +36,7 @@ export const useUserStore = defineStore('user', {
       this.password = '';
       this.token = null;
       this.isAuthenticated = false; // Помечаем пользователя как не авторизованного
-
+      this.lastActivity = null;
       // Удаляем данные из localStorage
       localStorage.removeItem('token');
     },
