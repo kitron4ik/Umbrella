@@ -89,14 +89,14 @@ export default defineComponent({
         console.log('Отправляемый payload:', payload);
         const data = await userStore.login(payload);
         console.log('Ответ от сервера: ', data);
-        console.log('Ответ от сервера: ', userStore.role);
-        console.log('Ответ от сервера: ', userStore.token);
+        console.log('Ответ от сервера: ', data.role);
+        console.log('Ответ от сервера: ', data.token);
         this.closePopUp();
 
         // Перенаправление пользователя в зависимости от его роли
-        if (userStore.role === 'пациент') {
+        if (data.role === 'пациент') {
           this.$router.push('/pp');
-        } else if (userStore.role === 'доктор') {
+        } else if (data.role === 'доктор') {
           this.$router.push('/dp');
         }
       } catch (error) {
@@ -110,7 +110,7 @@ export default defineComponent({
         password: this.password,
       };
       try {
-        const data = await userStore.log(payload);
+        const data = await userStore.login(payload);
         console.log('Ответ от сервера:', data);
 
         this.closePopUp();
