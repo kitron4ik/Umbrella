@@ -5,33 +5,12 @@
 
       <div v-if="isRegister" class="PopReg">
     <h2>Регистрация</h2>
-    <form @submit.prevent="login" method="POST">
+    <form @submit.prevent="register" method="POST">
       <input type="text" class="group" v-model="regname" placeholder="ФИО" required />
       <input type="email" class="group" v-model="email" placeholder="Email" required />
-      <input
-        type="text"
-        class="group"
-        v-model="building_Code"
-        placeholder="Код здания"
-        required
-        @input="checkBuildingCode"
-      />
-      <input
-        type="text"
-        class="group"
-        v-model="role_Code"
-        placeholder="Код роли"
-        :disabled="!canEnterRoleCode"
-        @input="setRole"
-      />
-      <input
-        type="text"
-        class="group"
-        v-model="role"
-        placeholder="Роль"
-        required
-        readonly
-      />
+      <input type="text" class="group" v-model="building_Code" placeholder="Код здания" required @input="checkBuildingCode"/>
+      <input type="text" class="group" v-model="role_Code" placeholder="Код роли":disabled="!canEnterRoleCode" @input="setRole"/>
+      <input type="text" class="group" v-model="role" placeholder="Роль" required readonly/>
       <input type="password" class="group" v-model="password" placeholder="Пароль" required />
       <button type="submit" class="button-48"><span class="text">Зарегистрироваться</span></button>
     </form>
@@ -39,7 +18,7 @@
 
       <div v-else class="PopLog">
         <h2>Вход</h2>
-        <form @submit.prevent="log">
+        <form @submit.prevent="login">
           <input type="email" class="group" v-model="email" placeholder="Email" required />
           <input type="password" class="group" v-model="password" placeholder="Пароль" required />
           <button type="submit" class="button-48"><span class="text">Войти</span></button>
@@ -95,7 +74,7 @@ export default defineComponent({
         this.role = '';
       }
     },
-    async login() {
+    async register() {
       const userStore = useUserStore();
       
       const payload = {
@@ -110,7 +89,8 @@ export default defineComponent({
         console.log('Отправляемый payload:', payload);
         const data = await userStore.login(payload);
         console.log('Ответ от сервера: ', data);
-
+        console.log('Ответ от сервера: ', userStore.role);
+        console.log('Ответ от сервера: ', userStore.token);
         this.closePopUp();
 
         // Перенаправление пользователя в зависимости от его роли
@@ -123,7 +103,7 @@ export default defineComponent({
         console.error('Ошибка при отправке данных:', error);
       }
     },
-    async log() {
+    async login() {
       const userStore = useUserStore();
       const payload = {
         email: this.email,
