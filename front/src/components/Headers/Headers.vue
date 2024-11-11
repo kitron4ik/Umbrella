@@ -93,6 +93,18 @@ export default {
   right: 60%;
   margin-top: 22px;
 }
+.header {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* ставим высокое значение, чтобы панель оставалась выше остальных элементов */
+  
+}
+
+.wrapper {
+  padding-top: 30; /* добавьте отступ сверху, чтобы компенсировать высоту фиксированной панели */
+}
 
 .header_link.registerButton {
   margin: 0 auto;

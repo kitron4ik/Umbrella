@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser, Group, Permission
+from django.contrib.auth.models import AbstractUser,  Group, Permission, PermissionsMixin
 
 class RegUser(AbstractUser):
     regname = models.CharField(max_length=100)
@@ -27,3 +27,9 @@ class RegUser(AbstractUser):
 
 def __str__(self):
         return self.regname 
+
+
+
+
+
+

@@ -39,7 +39,7 @@
 
       <div v-else class="PopLog">
         <h2>Вход</h2>
-        <form @submit.prevent="login">
+        <form @submit.prevent="log">
           <input type="email" class="group" v-model="email" placeholder="Email" required />
           <input type="password" class="group" v-model="password" placeholder="Пароль" required />
           <button type="submit" class="button-48"><span class="text">Войти</span></button>
@@ -135,15 +135,17 @@ export default defineComponent({
         console.error('Ошибка при отправке данных:', error);
       }
     },
-    async login() {
+    async log() {
       try {
-        const payload = {
+        const payload1 = {
           email: this.email,
           password: this.password,
+          role_code: this.role_Code,
         };
+        console.log('Принимаемый payload:', payload1);
 
         // Отправка данных для входа
-        const response = await axios.post('/api/log/', payload, {
+        const response = await axios.get('/api/log/', payload1, {
           headers: {
             'Content-Type': 'application/json',
           },

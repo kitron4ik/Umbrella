@@ -5,6 +5,10 @@ from . import views
 from django.shortcuts import redirect
 
 
+
 urlpatterns = [
      path('login/', views.login_view),
+     path('log/', views.log_view),
+
+     
 ]
