@@ -145,7 +145,7 @@ export default defineComponent({
         console.log('Принимаемый payload:', payload1);
 
         // Отправка данных для входа
-        const response = await axios.get('/api/log/', payload1, {
+        const response = await axios.post('/api/log/', payload1, {
           headers: {
             'Content-Type': 'application/json',
           },
