@@ -1,6 +1,6 @@
 from django.urls import path
 from django.urls import re_path as url
-from  main.views import *
+from  account.views import *
 from . import views
 from django.shortcuts import redirect
 

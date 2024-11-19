@@ -2,8 +2,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import RegUser
-from .serializer import LoginSerializer
+from .models import RegUser 
+from .serializer import LoginSerializer, LogSerializer
 from django.contrib.auth import authenticate
 import json
 
@@ -44,29 +44,30 @@ def login_view(request):
 
     return Response({"error": "Invalid request method"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
+# Function to generate JWT tokens for the user
+def get_tokens_for_user(user):
+    refresh = RefreshToken.for_user(user)
+    return {
+        'refresh': str(refresh),
+        'access': str(refresh.access_token),
+    }
+
+
 @api_view(['POST'])
 def log_view(request):
     if request.method == 'POST':
-        if request.content_type != 'application/json':
-            return Response({"error": "Content-Type must be application/json"}, status=status.HTTP_400_BAD_REQUEST)
-
-        try:
-            data = json.loads(request.body)
-        except json.JSONDecodeError:
-            return Response({"error": "Invalid JSON"}, status=status.HTTP_400_BAD_REQUEST)
-
-        email = data.get('email')
-        password = data.get('password')
-
-        if not email or not password:
-            return Response({"error": "Email and password are required"}, status=status.HTTP_400_BAD_REQUEST)
-
-        user = authenticate(request, email=email, password=password)
-        if user is not None:
+        serializer = LogSerializer(data=request.data)  # Use serializer for validation
+        if serializer.is_valid():
+            user = serializer.validated_data['user'] 
+            print(user)
             tokens = get_tokens_for_user(user)
             return Response({
                 "message": "Login successful",
                 "tokens": tokens
             }, status=status.HTTP_200_OK)
-        
-        return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+
+        # Return validation errors
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # Unsupported request method
+    return Response({"error": "Invalid request method"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)

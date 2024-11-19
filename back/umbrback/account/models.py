@@ -9,6 +9,7 @@ class RegUser(AbstractUser):
     role = models.CharField(max_length=100)
     password = models.CharField(max_length=100)
     
+    
     groups = models.ManyToManyField(
         Group,
         related_name="reguser_set",  # Уникальное имя для обратной связи

@@ -1,13 +1,13 @@
 from django.contrib.auth.models import User
-from .models import RegUser
+from account.models import RegUser
 class EmailAuthBackend:
 
-    def authenticate(self, request, regname=None, password=None):
+    def authenticate(self, request, email=None, password=None):
         """
         Overrides the authenticate method to allow users to log in using their email address.
         """
         try:
-            user = User.objects.get(email=regname)
+            user = User.objects.get(email=email)
             if user.check_password(password):
                     
                 return user
