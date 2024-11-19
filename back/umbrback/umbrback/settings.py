@@ -129,7 +129,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'umbrelladb',
         'USER': 'root',
-        'PASSWORD': '',
+        'PASSWORD': '1212',
         'HOST': 'localhost',
         'PORT': '3306',
     }
@@ -154,10 +154,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+
 AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # Встроенный бэкенд
     'account.auth_backends.EmailBackend',  
-    'django.contrib.auth.backends.ModelBackend',  
 ]
+
+AUTH_USER_MODEL = 'account.RegUser'
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/

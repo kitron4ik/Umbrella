@@ -1,15 +1,23 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser,  Group, Permission, PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission
 
-class RegUser(AbstractUser):
-    regname = models.CharField(max_length=100)
+class CustomUserManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError("The Email field must be set")
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)  # Хеширует пароль
+        user.save(using=self._db)
+        return user
+
+class RegUser(AbstractBaseUser, PermissionsMixin):
+    regname = models.CharField(max_length=100, blank=True, null=True)
     email = models.EmailField(unique=True)
-    role_code = models.IntegerField()
-    building_code = models.IntegerField()  
-    role = models.CharField(max_length=100)
-    password = models.CharField(max_length=100)
-    
-    
+    role_code = models.IntegerField(blank=True, null=True)
+    building_code = models.IntegerField(blank=True, null=True)
+    role = models.CharField(max_length=100, blank=True, null=True)
+
     groups = models.ManyToManyField(
         Group,
         related_name="reguser_set",  # Уникальное имя для обратной связи
@@ -21,16 +29,17 @@ class RegUser(AbstractUser):
         blank=True
     )
 
-    
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+
+    # Указываем, что email будет использоваться для логина
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []  # Здесь можно указать дополнительные обязательные поля
+
+    objects = CustomUserManager()
+
     class Meta:
         db_table = "reg"
-        
 
-def __str__(self):
-        return self.regname 
-
-
-
-
-
-
+    def __str__(self):
+        return self.email
