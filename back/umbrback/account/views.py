@@ -46,28 +46,40 @@ def login_view(request):
 
 # Function to generate JWT tokens for the user
 def get_tokens_for_user(user):
-    refresh = RefreshToken.for_user(user)
+    # Здесь передаем сам объект пользователя, а не словарь
+    refresh = RefreshToken.for_user(user)  # user — это объект модели, а не словарь
     return {
-        'refresh': str(refresh),
         'access': str(refresh.access_token),
+        'refresh': str(refresh),
     }
 
 
 @api_view(['POST'])
 def log_view(request):
     if request.method == 'POST':
-        serializer = LogSerializer(data=request.data)  # Use serializer for validation
+        # Создаем экземпляр сериализатора с данными из запроса
+        serializer = LogSerializer(data=request.data)
+        
+        # Проверяем, если данные валидны
         if serializer.is_valid():
-            user = serializer.validated_data['user'] 
-            print(user)
+            # Извлекаем данные пользователя (без id)
+            user_data = serializer.validated_data['user']
+            
+            # Извлекаем фактического пользователя для генерации токенов
+            user = serializer.validated_data['actual_user']
+
+            # Генерируем токены для пользователя
             tokens = get_tokens_for_user(user)
+            
+            # Возвращаем успешный ответ с токенами
             return Response({
                 "message": "Login successful",
-                "tokens": tokens
+                "tokens": tokens,
+                "user_data": user_data  # Возвращаем данные пользователя без id
             }, status=status.HTTP_200_OK)
 
-        # Return validation errors
+        # Если валидация не прошла, возвращаем ошибки
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # Unsupported request method
+    # Если метод запроса не POST, возвращаем ошибку
     return Response({"error": "Invalid request method"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)

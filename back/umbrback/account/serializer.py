@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth import authenticate
+from rest_framework.response import Response
 
 class LoginSerializer(serializers.ModelSerializer):    
     class Meta:
@@ -28,26 +29,37 @@ class LoginSerializer(serializers.ModelSerializer):
 class LogSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
+
     def validate(self, data):
         email = data.get('email', '').strip().lower()
         password = data.get('password')
-        
+
         if not email or not password:
             raise serializers.ValidationError("Email and password are required.")
 
-        # Authenticate the user
-        
+        # Authenticate the user using email and password
         user = authenticate(email=email, password=password)
-        print(user)
-        
+
         if user is None:
             raise serializers.ValidationError("Invalid email or password.")
 
+        # Now `user` is an authenticated user object
         if not user.is_active:
             raise serializers.ValidationError("This account is inactive.")
 
-        data['user'] = user
+        # Add user data (excluding `id`) to response
+        data['user'] = {
+            'regname': user.regname,
+            'role': user.role,
+            'role_code': user.role_code,
+            'building_code': user.building_code,
+        }
+
+        # Return the actual user object (for token generation)
+        data['actual_user'] = user  # Store the actual user for later use
         return data
-        
+
+
+
         
      

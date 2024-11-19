@@ -52,6 +52,8 @@
 <script>
 import axios from 'axios';
 import { defineComponent } from 'vue';
+import { useRouter } from 'vue-router';
+import { useUserStore } from '@/stores/UserStore';
 
 axios.defaults.baseURL = 'http://localhost:8000';
 
@@ -68,6 +70,7 @@ export default defineComponent({
   },
   data() {
     return {
+      isLoggedIn: false,
       regname: '',
       email: '',
       building_Code: '',
@@ -75,32 +78,36 @@ export default defineComponent({
       role: '',
       password: '',
       canEnterRoleCode: false, // Флаг для активации поля role_Code
+      userInfo: null,
     };
   },
+  setup() {
+    const router = useRouter(); // Инициализация маршрутизатора
+    const userStore = useUserStore(); // Используем Pinia хранилище
+    return { router, userStore };
+  },
   methods: {
-    // Метод для проверки кода здания
+    // Проверка кода здания
     checkBuildingCode() {
-      // Активируем поле role_Code только если building_Code равен "001"
       this.canEnterRoleCode = this.building_Code === '001';
       if (!this.canEnterRoleCode) {
         this.role_Code = ''; // Очистка role_Code если building_Code неверный
         this.role = ''; // Очистка роли, если код здания неверный
       }
     },
-    // Метод для установки роли на основе кода роли
+    // Установка роли на основе кода роли
     setRole() {
       if (this.role_Code === '001') {
         this.role = 'пациент';
       } else if (this.role_Code === '002') {
         this.role = 'доктор';
       } else {
-        this.role = ''; // Очистка роли, если введен неверный код
+        this.role = '';
       }
     },
-    // Метод для отправки данных формы на сервер
+    // Отправка данных для регистрации
     async login() {
       try {
-        // Создаем объект с данными для отправки
         const payload = {
           regname: this.regname,
           email: this.email,
@@ -109,68 +116,91 @@ export default defineComponent({
           role: this.role,
           password: this.password,
         };
+
         console.log('Отправляемый payload:', payload);
 
-        // Отправляем POST-запрос на сервер
         const response = await axios.post('api/login/', payload, {
           headers: {
             'Content-Type': 'application/json',
           },
         });
 
-        // Логируем ответ от сервера
-        console.log(response.data);
+        const { regname, role, token } = response.data.user;
 
-        // Закрываем всплывающее окно после успешной отправки
+        // Сохранение данных пользователя в локальном хранилище
+        localStorage.setItem('token', token);
+        localStorage.setItem('regname', regname);
+        localStorage.setItem('role', role);
+
+        // Обновление глобального состояния через Pinia
+        this.userStore.setUser({
+          regname,
+          role,
+          token,
+        });
+        this.isLoggedIn = true;
         this.closePopUp();
-
-        // Перенаправление пользователя в зависимости от его роли
-        if (this.role === 'пациент') {
-          this.$router.push('/pp');
-        } else if (this.role === 'доктор') {
-          this.$router.push('/dp');
-        }
+        this.router.push('/login');
       } catch (error) {
-        // Обрабатываем ошибки при отправке данных
         console.error('Ошибка при отправке данных:', error);
       }
     },
     async log() {
-      try {
-        const payload1 = {
-          email: this.email,
-          password: this.password,
-          role_code: this.role_Code,
-        };
-        console.log('Принимаемый payload:', payload1);
+  try {
+    const payload = {
+      email: this.email,
+      password: this.password,
+      role_code: this.role_Code,
+    };
 
-        // Отправка данных для входа
-        const response = await axios.post('/api/log/', payload1, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+    // Отправка запроса на сервер с email, паролем и role_code
+    const response = await axios.post('/api/log/', payload, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-        console.log('Ответ от сервера:', response.data);
-        this.closePopUp();
+    // Извлекаем данные пользователя и токен из ответа
+    const { message, tokens, user_data } = response.data;
+    console.log(response.data);
 
-        // Перенаправление пользователя в зависимости от роли
-        if (response.data.role === 'пациент') {
-          this.$router.push('/pp');
-        } else if (response.data.role === 'доктор') {
-          this.$router.push('/dp');
-        }
-      } catch (error) {
-        console.error('Ошибка при входе:', error);
-      }
-    },
-    // Метод для закрытия всплывающего окна
+    // Сохранение данных пользователя в локальном хранилище
+    localStorage.setItem('token', tokens.access);
+    localStorage.setItem('refresh_token', tokens.refresh);
+    localStorage.setItem('regname', user_data.regname);
+    localStorage.setItem('role', user_data.role);
+    localStorage.setItem('role_code', user_data.role_code);
+    localStorage.setItem('building_code', user_data.building_code);
+
+    // Обновление глобального состояния через Pinia store
+    const userStore = useUserStore();
+    userStore.setUser({
+      regname: user_data.regname,
+      role: user_data.role,
+      role_code: user_data.role_code,
+      building_code: user_data.building_code,
+      token: tokens.access,
+    });
+
+    // Закрытие попапа
+    this.closePopUp();
+
+    // Перенаправление на страницу после логина (например, на главную страницу)
+    this.$router.push('/login');  // Замените '/dashboard' на нужный маршрут
+
+  } catch (error) {
+    console.error('Ошибка при отправке данных:', error);
+    alert('Не удалось войти, проверьте введенные данные.');
+  }
+},
+
     closePopUp() {
       this.$emit('close');
     },
   },
 });
 </script>
+
 
 
 
