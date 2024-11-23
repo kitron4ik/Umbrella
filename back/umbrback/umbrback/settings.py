@@ -129,7 +129,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'umbrelladb',
         'USER': 'root',
-        'PASSWORD': '1212',
+        'PASSWORD': '',
         'HOST': 'localhost',
         'PORT': '3306',
     }
