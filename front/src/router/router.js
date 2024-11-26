@@ -12,14 +12,6 @@ const routes = [
         component:() => import('../pages/LogPage.vue')
     },
     {
-        path: '/dp',
-        component: () => import('../pages/DrPages/DoctorPage.vue'),
-    },
-    {
-        path: '/pp',
-        component: () => import('../pages/Pacient/Pacient.vue'),
-    },
-    {
         path: '/pz',
         component: () => import('../pages/DrPages/PacZap.vue'),
     },
@@ -35,10 +27,6 @@ const routes = [
         path: '/zp',
         component: () => import('../pages/Pacient/ZapPrim.vue'),
     },
-    {
-        path: '/MyCard',
-        component: () => import('../pages/Pacient/MyCard.vue'),
-    }
 ]
 
 const router = createRouter({

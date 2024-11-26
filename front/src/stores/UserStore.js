@@ -1,26 +1,31 @@
-// stores/userStore.js
+// stores/UserStore.js
 import { defineStore } from 'pinia';
 
 export const useUserStore = defineStore('user', {
   state: () => ({
-    regname: null,
-    role: null,
-    token: null,
+    regname: '',
+    role: '',
+    token: '',
     isLoggedIn: false,
   }),
   actions: {
-    setUser(data) {
-      this.regname = data.regname;
-      this.role = data.role;
-      this.token = data.token;
-      this.isLoggedIn = true;
+    setUser(user) {
+      this.regname = user.regname;
+      this.role = user.role;
+      this.token = user.token;
+      this.isLoggedIn = true; // Установите флаг входа
+    },
+    clearUser() {
+      this.regname = '';
+      this.role = '';
+      this.token = '';
+      this.isLoggedIn = false; // Сбросьте флаг входа
     },
     logout() {
-      this.regname = null;
-      this.role = null;
-      this.token = null;
-      this.isLoggedIn = false;
-      localStorage.clear();
+      this.clearUser(); // Очистите данные пользователя при выходе
+      localStorage.removeItem('token');
+      localStorage.removeItem('regname');
+      localStorage.removeItem('role');
     },
   },
 });

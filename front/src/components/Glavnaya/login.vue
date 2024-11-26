@@ -77,25 +77,24 @@ export default defineComponent({
       role_Code: '',
       role: '',
       password: '',
-      canEnterRoleCode: false, // Флаг для активации поля role_Code
+      canEnterRoleCode: false,
       userInfo: null,
+      sessionTimeout: null,  // Для хранения идентификатора таймера
     };
   },
   setup() {
-    const router = useRouter(); // Инициализация маршрутизатора
-    const userStore = useUserStore(); // Используем Pinia хранилище
+    const router = useRouter();
+    const userStore = useUserStore();
     return { router, userStore };
   },
   methods: {
-    // Проверка кода здания
     checkBuildingCode() {
       this.canEnterRoleCode = this.building_Code === '001';
       if (!this.canEnterRoleCode) {
-        this.role_Code = ''; // Очистка role_Code если building_Code неверный
-        this.role = ''; // Очистка роли, если код здания неверный
+        this.role_Code = '';
+        this.role = '';
       }
     },
-    // Установка роли на основе кода роли
     setRole() {
       if (this.role_Code === '001') {
         this.role = 'пациент';
@@ -105,47 +104,54 @@ export default defineComponent({
         this.role = '';
       }
     },
-    // Отправка данных для регистрации
     async login() {
-      try {
-        const payload = {
-          regname: this.regname,
-          email: this.email,
-          building_code: this.building_Code,
-          role_code: this.role_Code,
-          role: this.role,
-          password: this.password,
-        };
+  try {
+    const payload = {
+      regname: this.regname,
+      email: this.email,
+      building_code: this.building_Code,
+      role_code: this.role_Code,
+      role: this.role,
+      password: this.password,
+    };
 
-        console.log('Отправляемый payload:', payload);
+    const response = await axios.post('api/login/', payload, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-        const response = await axios.post('api/login/', payload, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+    const { regname, role, token, id } = response.data.user; // Извлекаем id пользователя
 
-        const { regname, role, token } = response.data.user;
+    // Сохранение данных пользователя в локальном хранилище
+    localStorage.setItem('token', token);
+    localStorage.setItem('regname', regname);
+    localStorage.setItem('role', role);
+    localStorage.setItem('userId', id); // Сохраняем id пользователя
 
-        // Сохранение данных пользователя в локальном хранилище
-        localStorage.setItem('token', token);
-        localStorage.setItem('regname', regname);
-        localStorage.setItem('role', role);
+    // Обновление глобального состояния через Pinia
+    this.userStore.setUser({
+      regname,
+      role,
+      token,
+      userId: id, // Передаем id пользователя в хранилище
+    });
 
-        // Обновление глобального состояния через Pinia
-        this.userStore.setUser({
-          regname,
-          role,
-          token,
-        });
-        this.isLoggedIn = true;
-        this.closePopUp();
-        this.router.push('/login');
-      } catch (error) {
-        console.error('Ошибка при отправке данных:', error);
-      }
-    },
-    async log() {
+    this.isLoggedIn = true;
+    this.closePopUp();
+
+    // Установите таймер на 10 секунд
+    this.sessionTimeout = setTimeout(() => {
+      this.logout();  // Вызов метода для выхода
+    }, 10000);
+
+    this.router.push('/login');
+  } catch (error) {
+    console.error('Ошибка при отправке данных:', error);
+  }
+},
+
+async log() {
   try {
     const payload = {
       email: this.email,
@@ -153,26 +159,22 @@ export default defineComponent({
       role_code: this.role_Code,
     };
 
-    // Отправка запроса на сервер с email, паролем и role_code
     const response = await axios.post('/api/log/', payload, {
       headers: {
         'Content-Type': 'application/json',
       },
     });
 
-    // Извлекаем данные пользователя и токен из ответа
     const { message, tokens, user_data } = response.data;
-    console.log(response.data);
 
-    // Сохранение данных пользователя в локальном хранилище
     localStorage.setItem('token', tokens.access);
     localStorage.setItem('refresh_token', tokens.refresh);
     localStorage.setItem('regname', user_data.regname);
     localStorage.setItem('role', user_data.role);
     localStorage.setItem('role_code', user_data.role_code);
     localStorage.setItem('building_code', user_data.building_code);
+    localStorage.setItem('userId', user_data.id); // Сохраняем id пользователя
 
-    // Обновление глобального состояния через Pinia store
     const userStore = useUserStore();
     userStore.setUser({
       regname: user_data.regname,
@@ -180,20 +182,34 @@ export default defineComponent({
       role_code: user_data.role_code,
       building_code: user_data.building_code,
       token: tokens.access,
+      userId: user_data.id, // Передаем id пользователя в хранилище
     });
 
-    // Закрытие попапа
+    this.isLoggedIn = true;
     this.closePopUp();
 
-    // Перенаправление на страницу после логина (например, на главную страницу)
-    this.$router.push('/login');  // Замените '/dashboard' на нужный маршрут
+    // Установите таймер на 10 секунд
+    this.sessionTimeout = setTimeout(() => {
+      this.logout();  // Вызов метода для выхода
+    }, 10000);
 
+    this.$router.push('/login');
   } catch (error) {
     console.error('Ошибка при отправке данных:', error);
     alert('Не удалось войти, проверьте введенные данные.');
   }
 },
+    logout() {
+      // Очистка данных пользователя и завершение сессии
+      localStorage.removeItem('token');
+      localStorage.removeItem('regname');
+      localStorage.removeItem('role');
+      this.userStore.clearUser(); // Предполагается, что у вас есть метод для очистки данных пользователя в Pinia
+      this.isLoggedIn = false;
 
+      // Очистка таймера
+      clearTimeout(this.sessionTimeout);
+    },
     closePopUp() {
       this.$emit('close');
     },

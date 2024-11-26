@@ -1,86 +1,112 @@
 <template>
-    <div>
-      <header class="header">
-          <div class="wrapper">
-              <div class="header_wrapper">
-                  <div class="header_logo">
-                      <a href="/" class="header_logo_link">
-                          <img src="../../assets/png/logo.png" alt="logo">
-                      </a>
-                  </div>
-                  <nav class="header_nav">
-                      <ul class="header_list">
-                          <li class="header_item">
-                              <a href="/pp" class="header_link">Мой профиль</a>
-                          </li>
-                          <li class="header_item">
-                              <a href="/zp" class="header_link">Записаться на приём</a>
-                          </li>
-                          <li class="header_item">
-                              <a href="/MyCard" class="header_link" id="openRegister">Моя карточка</a>
-                          </li>
-                      </ul>
-                  </nav>
-              </div>
-          </div>
-      </header>
-  
-      <!-- Form for selecting date and time -->
-      <div class="appointment-form">
-        <form @submit.prevent="submitForm">
-          <label for="appointment-date">Выберите день:</label>
-          <input type="date" id="appointment-date" v-model="appointmentDate" required>
-  
-          <label for="appointment-time">Выберите время:</label>
-          <input type="time" id="appointment-time" v-model="appointmentTime" required>
-  
-          <button type="submit">Записаться</button>
-        </form>
-      </div>
+  <div>
+    <component :is="headerComponent"></component>
+
+    <!-- Form for selecting date and time -->
+    <div class="appointment-form">
+      <form @submit.prevent="submitForm">
+        <label for="appointment-date">Выберите день:</label>
+        <input type="date" id="appointment-date" v-model="appointmentDate" required>
+
+        <label for="appointment-time">Выберите время:</label>
+        <input type="time" id="appointment-time" v-model="appointmentTime" required>
+
+        <button type="submit">Записаться</button>
+      </form>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        appointmentDate: '',
-        appointmentTime: ''
+  </div>
+</template>
+
+<script>
+import axios from 'axios';
+import { useUserStore } from '@/stores/UserStore';
+import { computed } from 'vue';
+import HeaderPac from '@/components/Headers/HeaderPac.vue';
+
+export default {
+  data() {
+    return {
+      appointmentDate: '',
+      appointmentTime: '',
+      HeaderPac,
+    };
+  },
+  setup() {
+    const userStore = useUserStore();
+    
+    // Используем computed для получения userId
+    const userId = computed(() => userStore.userId);
+    
+    return {
+      userId,
+    };
+  },
+  methods: {
+    async submitForm() {
+      if (!this.appointmentDate || !this.appointmentTime) {
+        alert('Пожалуйста, выберите дату и время.');
+        return;
+      }
+
+      console.log('userId:', this.userId); // Отладочная информация
+
+      const payload = {
+        date: this.appointmentDate,
+        time: this.appointmentTime,
+        reg_id: this.userId, // Используем id пользователя в payload
       };
-    },
-    methods: {
-      submitForm() {
-        // Submit form logic
-        console.log('Дата:', this.appointmentDate);
-        console.log('Время:', this.appointmentTime);
+
+      console.log('Stored userId:', localStorage.getItem('userId')); // Проверка localStorage
+
+      try {
+        const response = await axios.post('/api/appointments/', payload, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (response.status === 200) {
+          alert('Запись успешно создана!');
+          this.appointmentDate = '';
+          this.appointmentTime = '';
+        }
+      } catch (error) {
+        console.error('Ошибка при записи:', error);
+        console.log(payload);
+        alert('Не удалось создать запись. Попробуйте снова.');
       }
     }
+  },
+  computed: {
+    headerComponent() {
+      return HeaderPac;
+    }
   }
-  </script>
-  
-  <style scoped>
-  /* margin: 30vh Вниз 30vh 30vh 30vh вправо; */
-  .appointment-form {
-    margin: 30vh 0vh 0vh 100vh;
-    display:block;
-  }
-  label {
-    display: block;
-    margin: 10px 0 5px;
-  }
-  input {
-    margin-bottom: 10px;
-    padding: 5px;
-  }
-  button {
-    padding: 10px 20px;
-    background-color: #00d5ff;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  button:hover {
-    background-color: #1ea2df;
-  }
-  </style>
-  
+}
+</script>
+
+<style scoped>
+.appointment-form {
+  margin: 30vh 0vh 0vh 100vh;
+  display: block;
+}
+label {
+  display: block;
+  margin: 10px 0 5px;
+}
+input {
+  margin-bottom: 10px;
+  padding: 5px;
+}
+button {
+  padding: 10px 20px;
+  background-color: #00d5ff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+button:hover {
+  background-color: #1ea2df;
+}
+</style>
