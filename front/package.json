@@ -13,6 +13,7 @@
     "core-js": "^3.8.3",
     "pinia": "^2.2.6",
     "vue": "^3.2.13",
+    "vue-cal": "^4.10.0",
     "vue-flatpickr-component": "^11.0.5",
     "vue-router": "^4.0.3",
     "vue3-datepicker": "^0.4.0",

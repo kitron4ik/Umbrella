@@ -12,11 +12,12 @@ class CustomUserManager(BaseUserManager):
         return user
 
 class RegUser(AbstractBaseUser, PermissionsMixin):
+    ROLES = (('doctor', 'Doctor'),('patient', 'Patient'),)
     regname = models.CharField(max_length=100, blank=True, null=True)
     email = models.EmailField(unique=True)
     role_code = models.IntegerField(blank=True, null=True)
     building_code = models.IntegerField(blank=True, null=True)
-    role = models.CharField(max_length=100, blank=True, null=True)
+    role = models.CharField(max_length=100, blank=True, null=True, choices=ROLES)
 
     groups = models.ManyToManyField(
         Group,

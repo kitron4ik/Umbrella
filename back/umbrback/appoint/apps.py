@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class ZapConfig(AppConfig):
+class AppointConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'zap'
+    name = 'appoint'

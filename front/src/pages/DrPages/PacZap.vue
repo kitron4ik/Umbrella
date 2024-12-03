@@ -1,90 +1,79 @@
 <template>
-    <div>
-        <component :is="headerComponent"></component>
-        <main class="PacZap">
-            <section class="DocZap">
-                    <h5 className ="Zapis">Пациенты на запись</h5>
-                    <a href="">
-                        <div className="CardName">
-                            <p className = "Names">Гетьман Владислав Сергеевич</p>
-                            <p className ="Time">10:15</p>
-                        </div>
-                    </a>
-                    
-            </section>
-        </main>
+    <div class="doctor-page">
+      <h1>Пациенты, записанные к вам</h1>
+      <div v-if="patients.length > 0">
+        <ul>
+          <li v-for="patient in patients" :key="patient.appointment_id" class="patient-item">
+            <span>
+              {{ patient.patient_name }} 
+              ({{ patient.appointment_date }} в {{ patient.appointment_time }})
+            </span>
+            <!-- Передаём appointment_id для удаления записи -->
+            <button @click="removeAppointment(patient.appointment_id)">Завершить запись</button>
+            <!-- Передаём patient_id для просмотра профиля пациента -->
+            <button @click="viewPatientProfile(patient.patient_id)">Открыть профиль</button>
+          </li>
+        </ul>
+      </div>
+      <div v-else>
+        <p>Нет записей на приём.</p>
+      </div>
     </div>
 </template>
 
-
-<style scoped>
-a {
-    text-decoration: none;
-}
-.Time {
-    text-align: center;
-    display: flex;
-    margin: 25% 0 0 28%;
-    font-size: 100px;
-}
-.Names {
-    display: flex;
-    margin: 2% 0 0 8%;
-    
-}
-.Zapis {
-        font-family: 'Montserrat', light;
-        color:#05b8d8;
-        margin: 0 auto;
-
-        font-size: 64px;
-        font-weight: 275;
-        /* text-align: center;
-        line-height: 78px;
-        margin-top: 0px; */
-        box-sizing: border-box;
-        border-bottom: 1px solid rgb(31, 197, 219);
-        max-width: 700px;
-        margin-bottom: 25px;
-        
-}
-.CardName {
-    background-color: rgb(201, 250, 250);
-    border-radius: 25px;
-    box-sizing: border-box;
-    border: 1px solid rgb(31, 197, 219);
-    font-family: 'Montserrat', light;
-    margin: 0 auto;
-    color:#05b8d8;
-    font-size: 25px;
-    height: 500px;
-    width: 500px;
-    max-height: 500px;
-    cursor: pointer;
-}
-
-.PacZap {
-    background: linear-gradient(135.00deg, rgba(31, 166, 219, 0.2),rgba(0, 0, 0, 0) 37.405%,rgba(0, 0, 0, 0) 69.975%,rgba(31, 181, 219, 0.2) 100%),rgba(255, 255, 255, 0);
-}
-.DocZap {
-    height: 100vh;
-    padding-top: 75px;
-    font-size: 144px;
-}
-</style>
-
 <script>
-import HeaderDoc from '../../components/Headers/HeaderDoc.vue';
+import axios from 'axios';
 
 export default {
-    components: {
-        HeaderDoc,
+    data() {
+      return {
+        patients: [], // Список пациентов
+        doctorId: '', // ID доктора
+      };
     },
-    computed: {
-    headerComponent() {
-      return this.role === 'пациент' ? 'HeaderPac' : 'HeaderDoc';
-    },
-  },
-}
-</script>
+    methods: {
+      // Получение списка пациентов
+      async fetchPatients() {
+        this.doctorId = this.$route.params.id || localStorage.getItem('doctorId'); // ID доктора
+        if (!this.doctorId) {
+            alert('ID доктора отсутствует. Пожалуйста, войдите в систему.');
+            return;
+        }
 
+        try {
+            const response = await axios.get(`/api/appoint/appointments/${this.doctorId}/patients/`);
+            this.patients = response.data; // Сохраняем список пациентов
+            console.log(this.patients); // Проверяем структуру данных
+        } catch (error) {
+            console.error('Ошибка при загрузке пациентов:', error);
+            alert('Не удалось загрузить список пациентов.');
+        }
+      },
+
+      // Удаление записи
+      async removeAppointment(appointmentId) {
+        if (confirm("Вы уверены, что хотите удалить эту запись?")) { // Подтверждение удаления
+            try {
+                console.log("Удаляем запись с ID:", appointmentId); // Для отладки
+                await axios.delete(`/api/appoint/appointments/${appointmentId}/remove/`);
+                alert('Запись удалена!');
+                this.fetchPatients(); // Обновляем список после удаления
+            } catch (error) {
+                console.error('Ошибка при удалении записи:', error);
+                alert('Не удалось удалить запись');
+            }
+        }
+      },
+
+      // Переход на страницу профиля пациента
+      viewPatientProfile(patientId) {
+        this.$router.push(`/patient/${patientId}`);
+      },
+    },
+  
+    mounted() {
+      this.fetchPatients(); // Загружаем список пациентов при загрузке компонента
+    },
+};
+</script>
+  

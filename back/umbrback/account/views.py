@@ -62,7 +62,7 @@ def log_view(request):
         
         # Проверяем, если данные валидны
         if serializer.is_valid():
-            # Извлекаем данные пользователя (без id)
+            # Извлекаем данные пользователя (с id)
             user_data = serializer.validated_data['user']
             
             # Извлекаем фактического пользователя для генерации токенов
@@ -70,12 +70,15 @@ def log_view(request):
 
             # Генерируем токены для пользователя
             tokens = get_tokens_for_user(user)
-            
-            # Возвращаем успешный ответ с токенами
+
+            # Добавляем id в user_data
+            user_data['id'] = user.id  # Добавляем id пользователя в данные
+
+            # Возвращаем успешный ответ с токенами и данными пользователя
             return Response({
                 "message": "Login successful",
                 "tokens": tokens,
-                "user_data": user_data  # Возвращаем данные пользователя без id
+                "user_data": user_data  # Теперь возвращаем данные пользователя с id
             }, status=status.HTTP_200_OK)
 
         # Если валидация не прошла, возвращаем ошибки

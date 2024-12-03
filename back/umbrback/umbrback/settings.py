@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'account',
+    'appoint',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -129,7 +130,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'umbrelladb',
         'USER': 'root',
-        'PASSWORD': '',
+        'PASSWORD': '1212',
         'HOST': 'localhost',
         'PORT': '3306',
     }

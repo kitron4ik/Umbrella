@@ -3,7 +3,8 @@
     <component :is="headerComponent"></component>
     <h1>МОЙ ПРОФИЛЬ</h1>
     <div class="card" v-if="isLoggedIn">
-      <h2>Информация о {{ role }}е</h2>
+      <!-- Добавляем отображение id пользователя после regname -->
+      <h2>Информация о {{ role }}е (ID: {{ userID }})</h2>
       <p>{{ regname }}</p>
       <p class="desc">В данном поле будет отображаться то, чем вы были и какие лекарства вам выписал ваш доктор</p>
     </div>
@@ -15,6 +16,63 @@
     </div>
   </div>
 </template>
+
+
+
+
+<script>
+import { useUserStore } from '@/stores/UserStore';
+import { useRouter } from 'vue-router';
+import HeaderPac from '../components/Headers/HeaderPac.vue';
+import HeaderDoc from '../components/Headers/HeaderDoc.vue';
+
+export default {
+  components: {
+    HeaderPac,
+    HeaderDoc,
+  },
+  props: ['id'], // Пропс для получения id из маршрута
+  mounted() {
+    console.log('User ID:', this.id);
+  },
+  setup() {
+    const userStore = useUserStore();
+    const router = useRouter();
+
+    if (localStorage.getItem('token')) {
+      userStore.setUser({
+        regname: localStorage.getItem('regname'),
+        role: localStorage.getItem('role'),
+        token: localStorage.getItem('token'),
+      });
+    }
+
+    if (!userStore.isLoggedIn) {
+      router.push('/');
+    }
+
+    return {
+      regname: userStore.regname,
+      role: userStore.role,
+      isLoggedIn: userStore.isLoggedIn,
+      email: '',
+      password: '',
+      logout: userStore.logout,
+    };
+  },
+  computed: {
+    userID() {
+      console.log(this.userId)
+      return this.id; // Используем id из пропсов для отображения
+    },
+    headerComponent() {
+      return this.role === 'patient' ? 'HeaderPac' : 'HeaderDoc';
+    },
+  },
+};
+
+</script>
+
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;700&display=swap');
@@ -101,47 +159,3 @@ h2, p {
   transform: rotate(-10deg);
 }
 </style>
-
-<script>
-import { useUserStore } from '@/stores/UserStore';
-import { useRouter } from 'vue-router';
-import HeaderPac from '../components/Headers/HeaderPac.vue';
-import HeaderDoc from '../components/Headers/HeaderDoc.vue';
-
-export default {
-  components: {
-    HeaderPac,
-    HeaderDoc,
-  },
-  setup() {
-    const userStore = useUserStore();
-    const router = useRouter();
-
-    if (localStorage.getItem('token')) {
-      userStore.setUser({
-        regname: localStorage.getItem('regname'),
-        role: localStorage.getItem('role'),
-        token: localStorage.getItem('token'),
-      });
-    }
-
-    if (!userStore.isLoggedIn) {
-      router.push('/');
-    }
-
-    return {
-      regname: userStore.regname,
-      role: userStore.role,
-      isLoggedIn: userStore.isLoggedIn,
-      email: '',
-      password: '',
-      logout: userStore.logout,
-    };
-  },
-  computed: {
-    headerComponent() {
-      return this.role === 'пациент' ? 'HeaderPac' : 'HeaderDoc';
-    },
-  },
-};
-</script>

@@ -105,53 +105,54 @@ export default defineComponent({
       }
     },
     async login() {
-  try {
-    const payload = {
-      regname: this.regname,
-      email: this.email,
-      building_code: this.building_Code,
-      role_code: this.role_Code,
-      role: this.role,
-      password: this.password,
-    };
+      try {
+        const payload = {
+          regname: this.regname,
+          email: this.email,
+          building_code: this.building_Code,
+          role_code: this.role_Code,
+          role: this.role,
+          password: this.password,
+        };
 
-    const response = await axios.post('api/login/', payload, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+        const response = await axios.post('api/login/', payload, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
 
-    const { regname, role, token, id } = response.data.user; // Извлекаем id пользователя
+        const { regname, role, token, id } = response.data.user; // Извлекаем id пользователя
 
-    // Сохранение данных пользователя в локальном хранилище
-    localStorage.setItem('token', token);
-    localStorage.setItem('regname', regname);
-    localStorage.setItem('role', role);
-    localStorage.setItem('userId', id); // Сохраняем id пользователя
+        // Сохранение данных пользователя в локальном хранилище
+        localStorage.setItem('token', token);
+        localStorage.setItem('regname', regname);
+        localStorage.setItem('role', role);
+        localStorage.setItem('userId', id); // Сохраняем id пользователя
 
-    // Обновление глобального состояния через Pinia
-    this.userStore.setUser({
-      regname,
-      role,
-      token,
-      userId: id, // Передаем id пользователя в хранилище
-    });
+        // Обновление глобального состояния через Pinia
+        this.userStore.setUser({
+          regname,
+          role,
+          token,
+          userId: id, // Передаем id пользователя в хранилище
+        });
 
-    this.isLoggedIn = true;
-    this.closePopUp();
+        this.isLoggedIn = true;
+        this.closePopUp();
 
-    // Установите таймер на 10 секунд
-    this.sessionTimeout = setTimeout(() => {
-      this.logout();  // Вызов метода для выхода
-    }, 10000);
+        // Установите таймер на 10 секунд
+        this.sessionTimeout = setTimeout(() => {
+          this.logout();  // Вызов метода для выхода
+        }, 10000);
 
-    this.router.push('/login');
-  } catch (error) {
-    console.error('Ошибка при отправке данных:', error);
-  }
-},
+        // Переход на страницу login/:id
+        this.router.push(`/login/${id}`);
+      } catch (error) {
+        console.error('Ошибка при отправке данных:', error);
+      }
+    },
 
-async log() {
+    async log() {
   try {
     const payload = {
       email: this.email,
@@ -167,6 +168,7 @@ async log() {
 
     const { message, tokens, user_data } = response.data;
 
+    // Сохраняем данные в локальном хранилище
     localStorage.setItem('token', tokens.access);
     localStorage.setItem('refresh_token', tokens.refresh);
     localStorage.setItem('regname', user_data.regname);
@@ -175,8 +177,8 @@ async log() {
     localStorage.setItem('building_code', user_data.building_code);
     localStorage.setItem('userId', user_data.id); // Сохраняем id пользователя
 
-    const userStore = useUserStore();
-    userStore.setUser({
+    // Обновляем данные пользователя в Pinia
+    this.userStore.setUser({
       regname: user_data.regname,
       role: user_data.role,
       role_code: user_data.role_code,
@@ -184,21 +186,23 @@ async log() {
       token: tokens.access,
       userId: user_data.id, // Передаем id пользователя в хранилище
     });
-
+    console.log('Pinia state after setUser:', this.userStore.$state);
     this.isLoggedIn = true;
     this.closePopUp();
 
-    // Установите таймер на 10 секунд
+    // Установите таймер на 10 секунд для выхода
     this.sessionTimeout = setTimeout(() => {
       this.logout();  // Вызов метода для выхода
     }, 10000);
 
-    this.$router.push('/login');
+    // Переход на страницу login/:id
+    this.$router.push(`/login/${user_data.id}`); // Используем user_data.id напрямую
   } catch (error) {
     console.error('Ошибка при отправке данных:', error);
     alert('Не удалось войти, проверьте введенные данные.');
   }
 },
+
     logout() {
       // Очистка данных пользователя и завершение сессии
       localStorage.removeItem('token');
@@ -216,6 +220,7 @@ async log() {
   },
 });
 </script>
+
 
 
 

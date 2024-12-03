@@ -3,6 +3,7 @@ import { defineStore } from 'pinia';
 
 export const useUserStore = defineStore('user', {
   state: () => ({
+    userId: null, // id пользователя
     regname: '',
     role: '',
     token: '',
@@ -13,19 +14,28 @@ export const useUserStore = defineStore('user', {
       this.regname = user.regname;
       this.role = user.role;
       this.token = user.token;
-      this.isLoggedIn = true; // Установите флаг входа
+      this.userId = user.userId; // Сохраняем id пользователя
+      this.isLoggedIn = true; // Устанавливаем флаг входа
     },
     clearUser() {
       this.regname = '';
       this.role = '';
       this.token = '';
-      this.isLoggedIn = false; // Сбросьте флаг входа
+      this.userId = null; // Очищаем id пользователя
+      this.isLoggedIn = false; // Сбрасываем флаг входа
     },
     logout() {
-      this.clearUser(); // Очистите данные пользователя при выходе
+      this.clearUser(); // Очистить данные пользователя при выходе
       localStorage.removeItem('token');
       localStorage.removeItem('regname');
       localStorage.removeItem('role');
+      localStorage.removeItem('userId'); // Очищаем id из localStorage
     },
   },
+  getters: {
+    // Геттер для получения id пользователя
+    getUserId: (state) => state.userId,
+  },
 });
+
+

@@ -11,8 +11,9 @@ from rest_framework.response import Response
 
 class LoginSerializer(serializers.ModelSerializer):    
     class Meta:
+        
         model = RegUser
-        fields =[ 'regname', 'email', 'role_code', 'building_code','role', 'password']
+        fields =['id', 'regname', 'email', 'role_code', 'building_code','role', 'password']
         extra_kwargs = {'password':{'write_only': True}}
     def validate_email(self, value):
         if RegUser.objects.filter(email=value).exists():
