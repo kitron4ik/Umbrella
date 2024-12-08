@@ -193,7 +193,7 @@ export default defineComponent({
     // Установите таймер на 10 секунд для выхода
     this.sessionTimeout = setTimeout(() => {
       this.logout();  // Вызов метода для выхода
-    }, 10000);
+    }, 50000);
 
     // Переход на страницу login/:id
     this.$router.push(`/login/${user_data.id}`); // Используем user_data.id напрямую

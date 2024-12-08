@@ -1,46 +1,82 @@
 <template>
     <div class="patient-profile">
-      <h1>Профиль пациента</h1>
-      <p v-if="patientDetails">Имя пациента: {{ patientDetails.regname }}</p>
+      <component :is="headerComponent"></component>
+      <div class="profile-container">
+        <h1 class="profile-title">Профиль пациента</h1>
+        <p v-if="patientDetails" class="patient-info">Имя пациента: {{ patientDetails.regname }}</p>
   
-      <!-- История болезни -->
-      <div v-if="patientDetails">
-        <h2>История болезни</h2>
-        <div v-if="medicalConditions && medicalConditions.length > 0">
-          <ul>
-            <li v-for="condition in medicalConditions" :key="condition.id">
-              {{ condition.condition }} ({{ condition.date_added }})
-            </li>
-          </ul>
-        </div>
-        <div v-else>
-          <p>История болезни отсутствует.</p>
-        </div>
+        <div class="profile-content">
+          <!-- Область для сброса (слева) -->
+          <div class="drop-area-container">
+            <div
+              class="drop-area"
+              @dragover="onDragOver"
+              @drop="onDrop"
+            >
+              <h3>Перетащите сюда диагнозы</h3>
+              <ul>
+                <li v-for="(condition, index) in droppedConditions" :key="index">
+                  <input
+                    v-model="droppedConditions[index].condition"
+                    placeholder="Введите или отредактируйте диагноз"
+                  />
+                </li>
+              </ul>
+              <button @click="saveDroppedConditions">Сохранить</button>
+            </div>
+          </div>
   
-        <!-- Форма для добавления заболевания -->
-        <h3>Добавить диагноз</h3>
-        <textarea v-model="newCondition" placeholder="Введите диагноз пациента..." rows="4"></textarea>
-        <button @click="saveCondition">Сохранить</button>
+          <!-- Блоки с перетаскиваемыми болезнями (справа) -->
+          <div class="disease-blocks">
+            <div
+              class="disease-block"
+              draggable="true"
+              @dragstart="onDragStart($event, 'ОРВИ')"
+              @dragend="onDragEnd"
+            >
+              ОРВИ
+            </div>
+            <div
+              class="disease-block"
+              draggable="true"
+              @dragstart="onDragStart($event, 'Грипп')"
+              @dragend="onDragEnd"
+            >
+              Грипп
+            </div>
+            <div
+              class="disease-block"
+              draggable="true"
+              @dragstart="onDragStart($event, 'Диабет')"
+              @dragend="onDragEnd"
+            >
+              Диабет
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </template>
   
   <script>
-  import { useUserStore } from '@/stores/UserStore'; 
-  import axios from 'axios'; 
-
+  import { useUserStore } from '@/stores/UserStore';
+  import axios from 'axios';
+  import HeaderDoc from '../components/Headers/HeaderDoc.vue'; // Импорт компонента для доктора
+  
   export default {
     data() {
       return {
         patientDetails: null,
         medicalConditions: [],
-        newCondition: '',
+        draggedCondition: null, // Хранит перетаскиваемый диагноз
+        droppedConditions: [], // Диагнозы, которые были сброшены
+        headerComponent: HeaderDoc, // Устанавливаем компонент заголовка для доктора
       };
     },
     computed: {
       patientId() {
         const userStore = useUserStore();
-        return userStore.patientId;  
+        return userStore.patientId;
       },
     },
     watch: {
@@ -54,51 +90,70 @@
     methods: {
       async fetchPatientDetails(patientId) {
         try {
-          if (!this.isUserLoggedIn()) return; // Проверка авторизации
+          if (!this.isUserLoggedIn()) return;
           const response = await axios.get(`/api/login/?id=${patientId}`);
-          console.log(patientId);
           this.patientDetails = response.data;
-          console.log(this.patientDetails);
         } catch (error) {
           console.error('Ошибка при загрузке данных пациента:', error);
         }
       },
       async fetchMedicalConditions(patientId) {
         try {
-          if (!this.isUserLoggedIn()) return; // Проверка авторизации
+          if (!this.isUserLoggedIn()) return;
           const response = await axios.get(`/api/medcard/medcard/conditions/${patientId}/`);
           this.medicalConditions = response.data;
         } catch (error) {
           console.error('Ошибка при загрузке истории болезни:', error);
         }
       },
-      async saveCondition() {
-        if (!this.newCondition.trim()) {
-          alert('Пожалуйста, введите диагноз');
-          return;
-        }
+      async saveDroppedConditions() {
+        const conditions = this.droppedConditions.map(condition => ({
+          condition: condition.condition,
+          date_added: new Date().toISOString(),
+        }));
+  
+        const data = {
+          patientId: this.patientId,
+          conditions,
+        };
+  
+        console.log('Данные, отправляемые на сервер (saveDroppedConditions):', data);
   
         try {
-          if (!this.isUserLoggedIn()) return; // Проверка авторизации
-          const response = await axios.post('/api/medcard/medcard/save-condition/', {
-            patientId: this.patientId,
-            condition: this.newCondition,
-          });
-          alert('Диагноз успешно сохранен');
-          this.newCondition = ''; 
-          this.fetchMedicalConditions(this.patientId);  // Обновляем историю болезни
+          if (!this.isUserLoggedIn()) return;
+          await axios.post('/api/medcard/medcard/save-condition/', data);
+          alert('Диагнозы успешно сохранены');
+          this.fetchMedicalConditions(this.patientId);
         } catch (error) {
-          console.error('Ошибка при сохранении диагноза:', error);
-          alert('Не удалось сохранить диагноз');
+          console.error('Ошибка при сохранении диагнозов:', error);
+          alert('Не удалось сохранить диагнозы');
         }
       },
       isUserLoggedIn() {
         const userStore = useUserStore();
         if (!userStore.isLoggedIn) {
-          this.$router.push('/'); // Перенаправление на главную страницу, если не авторизован
+          this.$router.push('/');
           return false;
         }
         return true;
+      },
+      onDragStart(event, condition) {
+        this.draggedCondition = condition;
+        event.dataTransfer.effectAllowed = 'move';
+        event.dataTransfer.setData('text/plain', condition);
+        event.target.classList.add('dragging');
+      },
+      onDragOver(event) {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'move';
+      },
+      onDrop(event) {
+        event.preventDefault();
+        const condition = event.dataTransfer.getData('text/plain');
+        this.droppedConditions.push({ condition });
+      },
+      onDragEnd(event) {
+        event.target.classList.remove('dragging');
       },
     },
     mounted() {
@@ -107,100 +162,120 @@
         this.fetchPatientDetails(this.patientId);
         this.fetchMedicalConditions(this.patientId);
       } else if (!userStore.isLoggedIn) {
-        this.$router.push('/'); // Перенаправление на главную страницу, если не авторизован
+        this.$router.push('/');
       }
     },
   };
   </script>
   
   <style scoped>
-.patient-profile {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  font-family: 'Arial', sans-serif;
-}
+  .patient-profile {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .profile-container {
+    margin-top: 20px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .profile-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .patient-info {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 20px;
+  }
+  
+  .profile-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  
+  .drop-area-container {
 
-h1 {
-  font-size: 2.5em;
-  text-align: center;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-p {
-  font-size: 1.2em;
-  color: #555;
-}
-
-h2 {
-  font-size: 2em;
-  margin-top: 30px;
-  color: #2a9d8f;
-}
-
-h3 {
-  font-size: 1.8em;
-  margin-top: 20px;
-  color: #e76f51;
-}
-
-ul {
-  list-style-type: none;
-  padding-left: 0;
-}
-
-li {
-  background-color: #f4f4f4;
-  margin-bottom: 10px;
-  padding: 10px;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-li:hover {
-  background-color: #e9e9e9;
-}
-
-textarea {
-  width: 100%;
-  padding: 10px;
-  font-size: 1.2em;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-top: 10px;
-  resize: vertical;
-}
-
-button {
-  display: inline-block;
-  margin-top: 10px;
-  padding: 12px 20px;
-  font-size: 1.1em;
-  background-color: #2a9d8f;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: #21867a;
-}
-
-button:active {
-  background-color: #1a6b65;
-}
-
-p {
-  font-size: 1.1em;
-  color: #666;
-  text-align: center;
-}
-
-textarea::placeholder {
-  font-style: italic;
-  color: #aaa;
-}
-</style>
+    flex: 1;
+    margin-left: 250px;
+  }
+  
+  .drop-area {
+    width: 65%;
+    min-height: 150px;
+    height: 500px;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    background-color: #f9f9f9;
+  }
+  
+  .drop-area h3 {
+    color: #666;
+  }
+  
+  .drop-area ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .drop-area li {
+    margin-bottom: 10px;
+  }
+  
+  input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  button {
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
+  
+  button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .disease-blocks {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .disease-block {
+    width: 100px;
+    padding: 10px;
+    background-color: #4caf50;
+    color: #fff;
+    text-align: center;
+    border-radius: 4px;
+    cursor: grab;
+    margin-bottom: 10px;
+  }
+  
+  .disease-block.dragging {
+    opacity: 0.6;
+  }
+  </style>
+  

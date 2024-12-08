@@ -22,14 +22,15 @@ def get_medical_conditions(request, patient_id):
 @api_view(['POST'])
 def save_medical_condition(request):
     """
-    Добавить новый диагноз пациенту.
+    Добавить новые диагнозы пациенту.
     """
     patient_id = request.data.get('patientId')
-    condition = request.data.get('condition')
+    conditions = request.data.get('conditions')  # Получаем массив диагнозов
     appointment_id = request.data.get('appointmentId')
 
-    if not patient_id or not condition:
-        return Response({'error': 'Необходимы patientId и condition'}, status=status.HTTP_400_BAD_REQUEST)
+    if not patient_id or not conditions or not isinstance(conditions, list):
+        return Response({'error': 'Необходимы patientId и conditions (список)'},
+                        status=status.HTTP_400_BAD_REQUEST)
 
     # Проверка на наличие назначений, если они указаны
     appointment = None
@@ -39,14 +40,28 @@ def save_medical_condition(request):
         except Appointment.DoesNotExist:
             return Response({'error': 'Назначение не найдено'}, status=status.HTTP_404_NOT_FOUND)
 
-    # Создание нового диагноза
-    medical_condition = MedicalCondition(patient_id=patient_id, condition=condition, appointment=appointment)
-    medical_condition.save()
+    # Создание новых диагнозов
+    medical_conditions = []
+    for condition_data in conditions:
+        condition = condition_data.get('condition')
+        if not condition:
+            return Response({'error': 'Каждый диагноз должен содержать "condition"'},
+                            status=status.HTTP_400_BAD_REQUEST)
+        
+        # Создаем новый объект MedicalCondition
+        medical_condition = MedicalCondition(
+            patient_id=patient_id,
+            condition=condition,
+            appointment=appointment
+        )
+        medical_condition.save()
+        medical_conditions.append(medical_condition)
 
-    # Сериализуем сохранённый объект
-    serializer = MedicalConditionSerializer(medical_condition)
+    # Сериализуем сохраненные объекты
+    serializer = MedicalConditionSerializer(medical_conditions, many=True)
 
     return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
 @api_view(['DELETE'])
 def delete_medical_condition(request, condition_id):
