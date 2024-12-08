@@ -97,9 +97,9 @@ export default defineComponent({
     },
     setRole() {
       if (this.role_Code === '001') {
-        this.role = 'пациент';
+        this.role = 'patient';
       } else if (this.role_Code === '002') {
-        this.role = 'доктор';
+        this.role = 'doctor';
       } else {
         this.role = '';
       }

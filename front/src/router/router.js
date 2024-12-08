@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Login from '@/components/Glavnaya/login.vue';
+import { useUserStore } from '@/stores/UserStore'; // Импортируем Pinia Store
 
 const routes = [
-  { path: '/admin', component: Login },
+  { path: '/admin', component: () => import('@/components/Glavnaya/login.vue') },
   {
     path: '/',
     component: () => import('../pages/Main.vue'),
@@ -13,39 +13,42 @@ const routes = [
     props: true,
   },
   {
-    path: '/pz',
+    path: '/pz/:id',
     component: () => import('../pages/DrPages/PacZap.vue'),
     props: true,
   },
   {
-    path: '/docGr',
+    path: '/docGr/:id',
     component: () => import('../pages/DrPages/drGr.vue'),
     props: true,
   },
   {
-    path: '/spCard',
+    path: '/spCard/:id',
     component: () => import('../pages/DrPages/spCard.vue'),
     props: true,
   },
   {
-    path: '/zp',
+    path: '/zp/:id',
     component: () => import('../pages/Pacient/ZapPrim.vue'),
     props: true,
   },
 ];
 
 const router = createRouter({
-  routes,
   history: createWebHistory(process.env.BASE_URL),
+  routes,
 });
 
-// Глобальный хук для передачи id во все маршруты
 router.beforeEach((to, from, next) => {
-  const userId = localStorage.getItem('userId'); // Берем id из localStorage
-  if (userId) {
-    to.params.id = userId; // Добавляем id в параметры маршрута
+  const userStore = useUserStore();
+  const userId = localStorage.getItem('userId') || userStore.userId;
+
+  if (!userId && to.path !== '/login') {
+    console.warn(`🚫 Доступ запрещен к ${to.path}. Пользователь не авторизован.`);
+    return next('/admin'); // Важно: return next() останавливает выполнение
   }
-  next();
+
+  next(); // Вызов next() только если авторизация пройдена
 });
 
 export default router;

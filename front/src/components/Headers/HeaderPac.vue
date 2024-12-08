@@ -1,31 +1,41 @@
 <template>
-    <header class="header">
-      <div class="wrapper">
-        <div class="header_wrapper">
-          <div class="header_logo">
-            <a href="/" class="header_logo_link">
-              <img src="../../assets/png/logo.png" alt="logo" class="Logo">
-            </a>
-          </div>
-          <nav class="header_nav">
-            <ul class="header_list">
-              <li class="header_item">
-                <a href="/login" class="header_link">Мой профиль</a>
-              </li>
-              <li class="header_item">
-                <a href="/zp" class="header_link">Записаться на приём</a>
-              </li>
-            </ul>
-          </nav>
+  <header class="header">
+    <div class="wrapper">
+      <div class="header_wrapper">
+        <div class="header_logo">
+          <a href="/" class="header_logo_link">
+            <img src="../../assets/png/logo.png" alt="logo" class="Logo" />
+          </a>
         </div>
+        <nav class="header_nav">
+          <ul class="header_list" v-if="isAuthenticated">
+            <li class="header_item">
+              <a href="/login" class="header_link">Мой профиль</a>
+            </li>
+            <li class="header_item">
+              <a href="/zp" class="header_link">Записаться на приём</a>
+            </li>
+          </ul>
+        </nav>
       </div>
-    </header>
-  </template>
-  
-  <script>
-  export default {
-  }
-  </script>
+    </div>
+  </header>
+</template>
+
+<script>
+import { useUserStore } from "@/stores/UserStore";
+
+export default {
+  computed: {
+    isAuthenticated() {
+      const userStore = useUserStore();
+      return localStorage.getItem('userId') || userStore.userId;
+    },
+  },
+};
+</script>
+
+
   
   <style>
   .Logo {

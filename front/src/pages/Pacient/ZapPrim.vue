@@ -8,21 +8,47 @@
         </button>
       </li>
     </ul>
-
-    <!-- Модальное окно для записи -->
     <div v-if="showModal" class="modal">
       <div class="modal-content">
         <h2>Запись к доктору: {{ selectedDoctor.regname }}</h2>
-        <form @submit.prevent="submitAppointment">
-          <label for="date">Дата:</label>
-          <input type="date" v-model="appointment.date" required />
+        
+        <div v-if="step === 1" class="calendar">
+          <div class="calendar-header">
+            <button @click="prevMonth">←</button>
+            <div class="month-year">
+              <div class="month">{{ currentMonthName }}</div>
+              <div class="year">{{ currentYear }}</div>
+            </div>
+            <button @click="nextMonth">→</button>
+          </div>
+          <div class="calendar-grid">
+            <div class="day-name" v-for="day in daysOfWeek" :key="day">{{ day }}</div>
+            <div class="day" 
+              v-for="day in daysInMonth" 
+              :key="day.date" 
+              :class="{ 'today': day.isToday, 'disabled': day.isDisabled, 'selected': day.isSelected }"
+              @click="selectDate(day)">
+              {{ day.day }}
+            </div>
+          </div>
+          <button v-if="appointment.date" @click="goToNextStep">Далее</button>
+        </div>
 
-          <label for="time">Время:</label>
-          <input type="time" v-model="appointment.time" required />
+        <div v-if="step === 2" class="time-grid">
+          <div 
+            v-for="time in availableTimes" 
+            :key="time" 
+            class="time-block" 
+            :class="{ selected: time === appointment.time }" 
+            @click="selectTime(time)"
+          >
+            {{ time }}
+          </div>
+          <button v-if="appointment.time" @click="submitAppointment">Записаться</button>
+          <button @click="goBackToStep1">Назад</button>
+        </div>
 
-          <button type="submit">Записаться</button>
-          <button type="button" @click="closeModal">Отмена</button>
-        </form>
+        <button type="button" @click="closeModal">Отмена</button>
       </div>
     </div>
   </div>
@@ -30,24 +56,68 @@
 
 <script>
 import axios from 'axios';
-import { useAppointmentStore } from "@/stores/AppointmentStore"; // Импорт хранилища
+import { useAppointmentStore } from "@/stores/AppointmentStore";
+import { useUserStore } from "@/stores/UserStore"; // Импортируем Pinia UserStore
 
 export default {
   data() {
     return {
-      doctors: [], // Список докторов
-      showModal: false, // Показ модального окна
-      selectedDoctor: null, // Выбранный доктор
+      userId: null, // id пользователя
+      doctors: [],
+      showModal: false,
+      selectedDoctor: null,
       appointment: {
         date: "",
         time: "",
-        patient: 1, // ID текущего пациента (можно заменить на динамическое)
+        patient: null, // Сюда будет записан id пациента
         doctor: null,
       },
+      step: 1, // Текущий шаг (1 - выбор даты, 2 - выбор времени)
+      currentMonth: new Date().getMonth(),
+      currentYear: new Date().getFullYear(),
+      daysOfWeek: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+      availableTimes: this.generateTimeSlots(), 
     };
   },
+  computed: {
+    currentMonthName() {
+      const monthNames = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 
+                          'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+      return monthNames[this.currentMonth];
+    },
+    daysInMonth() {
+      const days = [];
+      const firstDay = new Date(this.currentYear, this.currentMonth, 1).getDay();
+      const daysInCurrentMonth = new Date(this.currentYear, this.currentMonth + 1, 0).getDate();
+      const shift = firstDay === 0 ? 6 : firstDay - 1;
+
+      for (let i = 0; i < shift; i++) {
+        days.push({ day: '', isDisabled: true });
+      }
+
+      for (let i = 1; i <= daysInCurrentMonth; i++) {
+        const date = new Date(this.currentYear, this.currentMonth, i);
+        days.push({ day: i, date: this.formatDate(date) });
+      }
+      return days;
+    },
+  },
   methods: {
-    // Получение списка докторов
+    formatDate(date) {
+      const year = date.getFullYear();
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const day = date.getDate().toString().padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    },
+    generateTimeSlots() {
+      const times = [];
+      for (let hour = 9; hour < 18; hour++) {
+        for (let minute of [0, 15, 30, 45]) {
+          times.push(`${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`);
+        }
+      }
+      return times;
+    },
     async fetchDoctors() {
       try {
         const response = await axios.get("/api/appoint/doctors/");
@@ -56,51 +126,162 @@ export default {
         console.error("Ошибка при загрузке списка докторов:", error);
       }
     },
-    // Открытие модального окна
     openModal(doctor) {
       this.selectedDoctor = doctor;
       this.appointment.doctor = doctor.id;
       this.showModal = true;
     },
-    // Закрытие модального окна
     closeModal() {
       this.showModal = false;
       this.selectedDoctor = null;
-      this.appointment.date = "";
-      this.appointment.time = "";
     },
-    // Отправка записи на сервер
     async submitAppointment() {
       try {
+        this.appointment.patient = this.userId; // Устанавливаем id текущего пациента
         const response = await axios.post("/api/appoint/appointments/", this.appointment);
-
-        // Сохранение ID записи в Pinia
-        const appointmentStore = useAppointmentStore();
-
-// Сохраняем ID записи
-        appointmentStore.setAppointmentId(response.data.appointment.id);
-
-        // Получаем ID записи
-        console.log('Appointment ID из Pinia:', appointmentStore.getAppointmentId);
-
-        appointmentStore.setAppointmentId("id: ",response.data.appointment.id); // Предполагается, что API возвращает ID записи в ответе
-        console.log(response.data.appointment.id)
         alert("Запись успешно создана!");
         this.closeModal();
       } catch (error) {
         console.error("Ошибка при создании записи:", error);
-        alert("На данное время запись есть");
       }
     },
+    selectDate(day) {
+      if (!day.isDisabled) {
+        this.appointment.date = day.date;
+      }
+    },
+    selectTime(time) {
+      this.appointment.time = time;
+    },
+    goToNextStep() {
+      if (this.appointment.date) this.step = 2;
+    },
+    goBackToStep1() {
+      this.step = 1;
+    }
   },
   mounted() {
-    this.fetchDoctors(); // Загрузка списка докторов при инициализации
+    const userStore = useUserStore();
+    this.userId = localStorage.getItem('userId') || userStore.userId;
+    if (!this.userId) {
+      alert("Пользователь не авторизован");
+      window.location.href = '/admin';
+    }
+    this.fetchDoctors();
   },
 };
 </script>
 
 
 <style scoped>
+.calendar .day.disabled {
+  color: #a0a0a0; /* Серый цвет */
+  cursor: not-allowed; /* Запрещённый курсор */
+  pointer-events: none; /* Полностью блокируем события клика */
+}
+
+.day.selected {
+  background: #4caf50;
+  color: white;
+}
+
+.time-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.time-block {
+  background: #f4f4f9;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.time-block:hover {
+  background: #d1e8ff;
+}
+
+.time-block.selected {
+  background: #4caf50;
+  color: white;
+}
+.modal {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex; justify-content: center; align-items: center;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 500px;
+}
+
+.calendar {
+  display: flex;
+  flex-direction: column;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.month-year {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.month, .year {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.day-name {
+  font-weight: bold;
+  text-align: center;
+}
+
+.day {
+  background: #f4f4f9;
+  border-radius: 5px;
+  text-align: center;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.day:hover {
+  background: #d1e8ff;
+}
+
+.day.today {
+  background: #f0a500;
+  color: white;
+}
+
+.day.disabled {
+  background: #e0e0e0;
+  pointer-events: none;
+}
+
+.day:not(.disabled):hover {
+  background: #8eb4f2;
+}
 .doctor-list {
   font-family: 'Arial', sans-serif;
   padding: 20px;
@@ -135,6 +316,7 @@ button {
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease;
   width: 100%;
+  margin-bottom: 10px;
 }
 
 button:hover {
