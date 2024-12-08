@@ -2,12 +2,26 @@
   <div class="container">
     <component :is="headerComponent"></component>
     <h1>МОЙ ПРОФИЛЬ</h1>
+
     <div class="card" v-if="isLoggedIn">
-      <!-- Добавляем отображение id пользователя после regname -->
       <h2>Информация о {{ role }}е (ID: {{ userID }})</h2>
       <p>{{ regname }}</p>
-      <p class="desc">В данном поле будет отображаться то, чем вы были и какие лекарства вам выписал ваш доктор</p>
+      
+      <div v-if="patientConditions && patientConditions.length > 0">
+  <h2>История болезней</h2>
+  <ul>
+    <li v-for="condition in patientConditions" :key="condition.id">
+      <p><strong>Диагноз:</strong> {{ condition.condition }}</p>
+      <!-- <p><strong>Дата диагноза:</strong> {{ condition.date_added }}</p> -->
+      <hr>
+    </li>
+  </ul>
+</div>
+      <div v-else>
+        <p class="desc">В данном поле будет отображаться то, чем вы были и какие лекарства вам выписал ваш доктор</p>
+      </div>
     </div>
+
     <div class="image-container">
       <img src="../assets/png/IntroShest/Bolshoi.png" alt="Bolshoi" class="fade-up__text-1000"/>
       <img src="../assets/png/IntroShest/srednii.png" alt="Srednii" class="fade-up__text-1100"/>
@@ -20,9 +34,13 @@
 
 
 
+
+
 <script>
+import { ref, computed } from 'vue';
 import { useUserStore } from '@/stores/UserStore';
 import { useRouter } from 'vue-router';
+import axios from 'axios'; // Импортируем axios для запросов
 import HeaderPac from '../components/Headers/HeaderPac.vue';
 import HeaderDoc from '../components/Headers/HeaderDoc.vue';
 
@@ -32,10 +50,7 @@ export default {
     HeaderDoc,
   },
   props: ['id'], // Пропс для получения id из маршрута
-  mounted() {
-    console.log('User ID:', this.id);
-  },
-  setup() {
+  setup(props) {
     const userStore = useUserStore();
     const router = useRouter();
 
@@ -51,27 +66,45 @@ export default {
       router.push('/');
     }
 
+    const regname = ref(userStore.regname);
+    const role = ref(userStore.role);
+    const isLoggedIn = ref(userStore.isLoggedIn);
+    const patientConditions = ref([]); // Используем ref для реактивности
+
+    const userID = computed(() => props.id); // Используем id из пропсов для отображения
+    const headerComponent = computed(() => (role.value === 'patient' ? 'HeaderPac' : 'HeaderDoc'));
+
+    const fetchPatientConditions = async (patientId) => {
+      try {
+        const response = await axios.get(`/api/medcard/medcard/conditions/${patientId}/`); // Получаем список диагнозов с бэкенда
+        if (response.data && response.data.length > 0) {
+          patientConditions.value = response.data; // Сохраняем все диагнозы в массив
+          console.log('Диагнозы пациента:', patientConditions.value);
+        } else {
+          patientConditions.value = []; // Если данных нет, делаем пустой массив
+        }
+      } catch (error) {
+        console.error('Ошибка при загрузке диагнозов:', error);
+        alert('Не удалось загрузить диагнозы');
+      }
+    };
+
+    // Вызываем функцию получения диагнозов при монтировании
+    fetchPatientConditions(props.id);
+
     return {
-      regname: userStore.regname,
-      role: userStore.role,
-      isLoggedIn: userStore.isLoggedIn,
-      email: '',
-      password: '',
-      logout: userStore.logout,
+      regname,
+      role,
+      isLoggedIn,
+      patientConditions,
+      userID,
+      headerComponent,
     };
   },
-  computed: {
-    userID() {
-      console.log(this.userId)
-      return this.id; // Используем id из пропсов для отображения
-    },
-    headerComponent() {
-      return this.role === 'patient' ? 'HeaderPac' : 'HeaderDoc';
-    },
-  },
 };
-
 </script>
+
+
 
 
 <style scoped>

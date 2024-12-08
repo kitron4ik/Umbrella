@@ -1,8 +1,13 @@
-# urls.py в приложении medcard
-from rest_framework.routers import DefaultRouter
-from .views import MedCardViewSet
+from django.urls import path
+from . import views
 
-router = DefaultRouter()
-router.register(r'medcards', MedCardViewSet, basename='medcard')
+urlpatterns = [
+    # Получение истории болезни по ID пациента
+    path('medcard/conditions/<int:patient_id>/', views.get_medical_conditions, name='get_medical_conditions'),
 
-urlpatterns = router.urls
+    # Добавление нового диагноза
+    path('medcard/save-condition/', views.save_medical_condition, name='save_medical_condition'),
+
+    # Удаление диагноза
+    path('medcard/conditions/<int:condition_id>/delete/', views.delete_medical_condition, name='delete_medical_condition'),
+]

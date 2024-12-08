@@ -3,17 +3,19 @@
     <div class="wrapper">
       <div class="header_wrapper">
         <div class="header_logo">
-          <a href="/" class="header_logo_link">
-            <img src="../../assets/png/logo.png" alt="logo" class="Logo" />
-          </a>
+          <router-link to="/" class="header_logo_link">
+            <img src="@/assets/png/logo.png" alt="logo" class="Logo" />
+          </router-link>
         </div>
         <nav class="header_nav">
           <ul class="header_list" v-if="isAuthenticated">
             <li class="header_item">
-              <a href="/login" class="header_link">Мой профиль</a>
+              <!-- Используем строковые шаблоны для динамического пути -->
+              <router-link :to="`/login/${userId}`" class="header_link">Мой профиль</router-link>
             </li>
             <li class="header_item">
-              <a href="/zp" class="header_link">Записаться на приём</a>
+              <!-- Используем строковые шаблоны для динамического пути -->
+              <router-link :to="`/zp/${userId}`" class="header_link">Записаться на приём</router-link>
             </li>
           </ul>
         </nav>
@@ -31,36 +33,39 @@ export default {
       const userStore = useUserStore();
       return localStorage.getItem('userId') || userStore.userId;
     },
+    // Получаем userId из localStorage или из userStore
+    userId() {
+      const userStore = useUserStore();
+      return localStorage.getItem('userId') || userStore.userId;
+    },
   },
 };
 </script>
 
+<style scoped>
+.Logo {
+  margin: 0 auto;
+  max-width: 75px;
+  max-height: 75px;
+}
 
-  
-  <style>
-  .Logo {
-      margin: 0 auto;
-      max-width: 75px;
-      max-height: 75px;
-  }
-  
-  .header_list {
-      padding: 0; /* Убираем отступы у списка */
-      list-style: none; /* Убираем маркеры списка */
-      display: flex; /* Используем flexbox для горизонтального расположения */
-  }
-  
-  .header_item {
-      margin: 0 30px; /* Увеличиваем расстояние между элементами навигации */
-  }
-  
-  .header_link {
-      text-decoration: none; /* Убираем подчеркивание */
-      color: #333; /* Цвет текста ссылок */
-      transition: color 0.3s; /* Плавный переход цвета */
-  }
-  
-  .header_link:hover {
-      color: #007BFF; /* Цвет при наведении */
-  }
-  </style>
+.header_list {
+  padding: 0;
+  list-style: none;
+  display: flex;
+}
+
+.header_item {
+  margin: 0 30px;
+}
+
+.header_link {
+  text-decoration: none;
+  color: #333;
+  transition: color 0.3s;
+}
+
+.header_link:hover {
+  color: #007BFF;
+}
+</style>

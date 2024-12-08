@@ -16,11 +16,24 @@ def get_tokens_for_user(user):
 
 @api_view(['GET', 'POST'])
 def login_view(request):
-    # GET для получения списка зарегистрированных пользователей
+    # Если запрос GET
     if request.method == 'GET':
-        regs = RegUser.objects.all()
-        serializer = LoginSerializer(regs, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        # Проверяем, передан ли id в параметрах запроса
+        user_id = request.query_params.get('id', None)
+
+        if user_id:
+            try:
+                # Ищем пользователя с данным id
+                user = RegUser.objects.get(id=user_id)
+                serializer = LoginSerializer(user)  # Сериализуем данные пользователя
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except RegUser.DoesNotExist:
+                return Response({'error': 'Пользователь не найден'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            # Если id не передан, возвращаем всех пользователей
+            regs = RegUser.objects.all()
+            serializer = LoginSerializer(regs, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
     # POST для регистрации нового пользователя
     elif request.method == 'POST':

@@ -1,28 +1,62 @@
-# views.py в приложении medcard
-from rest_framework import viewsets, permissions
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .models import MedicalCondition, Appointment
+from .serializers import MedicalConditionSerializer
 
-from .permissions import IsDoctor
-from .models import MedCard
-from .serializers import MedCardSerializer
+@api_view(['GET'])
+def get_medical_conditions(request, patient_id):
+    """
+    Получить историю болезни пациента по его ID.
+    """
+    try:
+        # Получаем все медицинские состояния для указанного пациента
+        conditions = MedicalCondition.objects.filter(patient_id=patient_id)
+    except MedicalCondition.DoesNotExist:
+        return Response({'error': 'История болезни не найдена'}, status=status.HTTP_404_NOT_FOUND)
 
-class MedCardViewSet(viewsets.ModelViewSet):
-    queryset = MedCard.objects.all()
-    serializer_class = MedCardSerializer
+    # Сериализуем данные
+    serializer = MedicalConditionSerializer(conditions, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def get_permissions(self):
-        """ Определяем доступ для разных ролей """
-        if self.action in ['create', 'update', 'partial_update', 'destroy']:
-            return [permissions.IsAuthenticated(), IsDoctor()]
-        elif self.action in ['list', 'retrieve']:
-            return [permissions.IsAuthenticated()]
-        return super().get_permissions()
+@api_view(['POST'])
+def save_medical_condition(request):
+    """
+    Добавить новый диагноз пациенту.
+    """
+    patient_id = request.data.get('patientId')
+    condition = request.data.get('condition')
+    appointment_id = request.data.get('appointmentId')
 
-    def get_queryset(self):
-        """ Ограничиваем видимость данных для пациентов и врачей """
-        user = self.request.user
-        if user.role == 'patient':
-            return MedCard.objects.filter(patient=user)
-        elif user.role == 'doctor':
-            return MedCard.objects.filter(doctor=user)
-        return MedCard.objects.none()
+    if not patient_id or not condition:
+        return Response({'error': 'Необходимы patientId и condition'}, status=status.HTTP_400_BAD_REQUEST)
 
+    # Проверка на наличие назначений, если они указаны
+    appointment = None
+    if appointment_id:
+        try:
+            appointment = Appointment.objects.get(id=appointment_id)
+        except Appointment.DoesNotExist:
+            return Response({'error': 'Назначение не найдено'}, status=status.HTTP_404_NOT_FOUND)
+
+    # Создание нового диагноза
+    medical_condition = MedicalCondition(patient_id=patient_id, condition=condition, appointment=appointment)
+    medical_condition.save()
+
+    # Сериализуем сохранённый объект
+    serializer = MedicalConditionSerializer(medical_condition)
+
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+@api_view(['DELETE'])
+def delete_medical_condition(request, condition_id):
+    """
+    Удалить диагноз по его ID.
+    """
+    try:
+        condition = MedicalCondition.objects.get(id=condition_id)
+    except MedicalCondition.DoesNotExist:
+        return Response({'error': 'Диагноз не найден'}, status=status.HTTP_404_NOT_FOUND)
+
+    condition.delete()
+    return Response({'message': 'Диагноз успешно удалён'}, status=status.HTTP_204_NO_CONTENT)

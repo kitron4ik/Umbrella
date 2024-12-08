@@ -13,15 +13,16 @@ const routes = [
     props: true,
   },
   {
+    path: '/patient/:id',
+    component: () => import('../pages/MedRed.vue'),
+    props: true,
+  },
+  {
     path: '/pz/:id',
     component: () => import('../pages/DrPages/PacZap.vue'),
     props: true,
   },
-  {
-    path: '/docGr/:id',
-    component: () => import('../pages/DrPages/drGr.vue'),
-    props: true,
-  },
+
   {
     path: '/spCard/:id',
     component: () => import('../pages/DrPages/spCard.vue'),

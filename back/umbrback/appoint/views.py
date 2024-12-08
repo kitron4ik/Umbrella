@@ -70,6 +70,7 @@ def get_patients_for_doctor(request, doctor_id):
                 'patient_name': appointment.patient.regname,  # Имя пациента
                 'appointment_date': appointment.date,         # Дата записи
                 'appointment_time': appointment.time,         # Время записи
+                'patient_id' :appointment.patient_id
             })
         
         return Response(patients_data, status=status.HTTP_200_OK)

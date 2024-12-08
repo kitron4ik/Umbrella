@@ -1,11 +1,8 @@
-# serializers.py в приложении medcard
 from rest_framework import serializers
-from .models import MedCard
+from .models import MedicalCondition
 
-class MedCardSerializer(serializers.ModelSerializer):
-    patient_name = serializers.ReadOnlyField(source='patient.regname')
-    doctor_name = serializers.ReadOnlyField(source='doctor.regname')
-
+class MedicalConditionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = MedCard
-        fields = ['id', 'patient', 'doctor', 'appointment', 'diagnosis', 'recommendations', 'created_at', 'updated_at', 'patient_name', 'doctor_name']
+        model = MedicalCondition
+        fields = ['id', 'patient', 'condition', 'appointment', 'date_added']  # Указываем все необходимые поля
+        read_only_fields = ['date_added']  # Дата добавления будет автоматически выставляться
